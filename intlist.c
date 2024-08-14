@@ -22,10 +22,9 @@ struct node* Create () {
    printf ("An empty linked list is created \n");
    head = NULL;
    return head;
-
 }
-//-------------------------------------------------------------------------------------------------
 
+//-------------------------------------------------------------------------------------------------
 //Prints elements of the list starting from the last element that was added to the list
 void PrintFunc (struct node* s) {
    struct node* temp = s;
@@ -38,6 +37,7 @@ void PrintFunc (struct node* s) {
       printf ("\n");
    } else { printf ("No elements in the list\n"); }
 }
+
 // ------------------------------------------------------------------------------------------------
 //Adds element at the end of the list
 void Add (struct node** head, int val) {
@@ -57,6 +57,7 @@ void Add (struct node** head, int val) {
    PrintFunc (store);
    return;
 }
+
 // ------------------------------------------------------------------------------------------------
 //Deletes the entire list
 void Delete (struct node** head) {
@@ -80,6 +81,7 @@ void Delete (struct node** head) {
       return;
    }
 }
+
 //-------------------------------------------------------------------------------------------------
 //Prints the number of elements in the list
 void Count(struct node** head) {
@@ -91,6 +93,7 @@ void Count(struct node** head) {
    }
    printf ("The number of elements in the list is %d\n", count);
 }
+
 // ------------------------------------------------------------------------------------------------
 //Returns the number of elements in the list
 int CountNum (struct node** head) {
