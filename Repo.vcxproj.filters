@@ -21,6 +21,9 @@
     <ClCompile Include="testintlist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hello.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intlist.h">
