@@ -15,8 +15,9 @@ int main () {
    Add (&head, 3);
    Add (&head, 4);
    Add (&head2, 6);
+   Add (&head2, 4);
    Delete (&head);
-   //Delete (&head2);
+   Delete (&head2);
    Insert (&head, 2, 0);
    Add (&head, 4);
    Insert (&head, 6, 2);
