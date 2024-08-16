@@ -16,6 +16,7 @@ struct node {
    int value;
    struct node* link;
 };
+
 //Defines head pointer and fixes it to null
 struct node* Create () {
    struct node* head = malloc (sizeof (struct node));
@@ -24,7 +25,6 @@ struct node* Create () {
    return head;
 }
 
-//-------------------------------------------------------------------------------------------------
 //Prints elements of the list starting from the last element that was added to the list
 void PrintFunc (struct node* s) {
    struct node* temp = s;
@@ -34,10 +34,10 @@ void PrintFunc (struct node* s) {
          printf ("%d -> ", temp->value);
          temp = temp->link;
       }
+      printf ("\n");
    } else { printf ("\nNo elements in the list\n"); }
 }
 
-// ------------------------------------------------------------------------------------------------
 //Adds element at the end of the list
 void Add (struct node** head, int val) {
    //Adds element to an empty list
@@ -57,7 +57,6 @@ void Add (struct node** head, int val) {
    return;
 }
 
-// ------------------------------------------------------------------------------------------------
 //Deletes the entire list
 void Delete (struct node** head) {
    struct node* store = *head;
@@ -81,7 +80,6 @@ void Delete (struct node** head) {
    }
 }
 
-//-------------------------------------------------------------------------------------------------
 //Prints the number of elements in the list
 void Count (struct node** head) {
    struct node* store = *head;
@@ -93,7 +91,6 @@ void Count (struct node** head) {
    printf ("\nThe number of elements in the list is %d\n", count);
 }
 
-// ------------------------------------------------------------------------------------------------
 //Returns the number of elements in the list
 int CountNum (struct node** head) {
    struct node* store = *head;
@@ -105,7 +102,6 @@ int CountNum (struct node** head) {
    return count;
 }
 
-// ------------------------------------------------------------------------------------------------
 //Removes the element at a zero based index position from the list
 void RemoveAt (struct node** head, int n) {
    int count = 0;
@@ -124,7 +120,7 @@ void RemoveAt (struct node** head, int n) {
       printf ("\nThe index exceeds the length of the list (zero based) \n");
       return;
    }
-//To remove the first element of the list
+   //To remove the first element of the list
    if (n == 0) {
       struct node* temp = *head;
       struct node* prev = *head;
@@ -198,7 +194,7 @@ void Get (struct node** head, int n) {
    }
    printf ("\nThe element at index position %d is %d \n", n, temp->value);
 }
-// ------------------------------------------------------------------------------------------------
+
 //Removes the first occurence of an element from the list
 void Remove (struct node** head, int n) {
    int count = (CountNum (head)) - 1;
@@ -226,7 +222,7 @@ void Remove (struct node** head, int n) {
       }
    }
 }
-// ------------------------------------------------------------------------------------------------
+
 //Inserts element at the given index position
 void Insert (struct node** head, int n, int pos) {
    int count = CountNum (head);
