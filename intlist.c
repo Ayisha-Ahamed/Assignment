@@ -173,7 +173,7 @@ void RemoveAt (struct node** head, int n) {
    free (temp);
    PrintFunc (*head);
 }
-// ------------------------------------------------------------------------------------------------
+
 //Gets the element from the given index position
 void Get (struct node** head, int n) {
    int lengthOfTheList = CountNum (head);
