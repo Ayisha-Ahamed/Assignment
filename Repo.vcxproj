@@ -130,11 +130,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hello.c" />
-    <ClCompile Include="intlist.c" />
-    <ClCompile Include="testintlist.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="intlist.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
