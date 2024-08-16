@@ -19,7 +19,7 @@ struct node {
 
 //Defines head pointer and fixes it to null
 struct node* Create () {
-   struct node* head = malloc (sizeof (struct node));
+   struct node* head;
    printf ("\nAn empty linked list is created \n");
    head = NULL;
    return head;
