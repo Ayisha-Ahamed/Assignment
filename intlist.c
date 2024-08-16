@@ -226,16 +226,16 @@ void Remove (struct node** head, int n) {
 //Inserts element at the given index position
 void Insert (struct node** head, int n, int pos) {
    int count = CountNum (head);
+   if ((pos > count) || (pos < 0)) {
+      printf ("\nInvalid insertion \n");
+      return;
+   }
    int cmp = count - pos;
    struct node* current = *head;
    struct node* prev = *head;
    struct node* newNode = malloc (sizeof (struct node));
    newNode->value = n;
    newNode->link = NULL;
-   if ((pos > count) || (pos < 0)) {
-      printf ("\nInvalid insertion \n");
-      return;
-   }
    //For inserting an element at the end of the list
    if (pos == count) {
       newNode->link = *head;
