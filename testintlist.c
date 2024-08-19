@@ -10,12 +10,16 @@
 
 
 int main () {
-   struct node* head = Create ();
-   struct node* head2 = Create ();
+   List head = Create ();
+   List head2 = Create ();
+   int k;
+   Add (&head, 3);
    Add (&head, 3);
    Add (&head, 4);
    Add (&head2, 6);
    Add (&head2, 4);
+   k = Get (&head, 1);
+   printf ("From get func : %d\n", k);
    Delete (&head);
    Delete (&head2);
    Insert (&head, 2, 0);
@@ -26,5 +30,4 @@ int main () {
    RemoveAt (&head, 0);
    Remove (&head, 4);
    Count (&head);
-   Get (&head, 1);
 }
