@@ -7,27 +7,31 @@
 // ------------------------------------------------------------------------------------------------
 
 #include "intlist.h"
+#include <stdio.h>
 
 
 int main () {
-   List head = Create ();
-   List head2 = Create ();
-   int k;
-   Add (&head, 3);
-   Add (&head, 3);
-   Add (&head, 4);
-   Add (&head2, 6);
-   Add (&head2, 4);
-   k = Get (&head, 1);
-   printf ("From get func : %d\n", k);
-   Delete (&head);
-   Delete (&head2);
-   Insert (&head, 2, 0);
-   Add (&head, 4);
-   Insert (&head, 6, 2);
-   Count (&head);
-   Remove (&head, 6);
-   RemoveAt (&head, 0);
-   Remove (&head, 4);
-   Count (&head);
+	List* head = Create ();
+	List* head2 = Create ();
+	int num;
+	Add (head, 1);
+	Add (head, 2);
+	Add (head, 3);
+	Add (head, 4);
+	PrintFunc (head);
+	Add (head2, 11);
+	Add (head2, 12);
+	PrintFunc (head2);
+	num = Get (head, 0);
+	printf ("From get func : %d\n", num);
+	num = Count (head);
+	printf ("From count func : %d\n", num);
+	Remove (head, 4);
+	PrintFunc (head);
+	RemoveAt (head, 1);
+	PrintFunc (head);
+	Insert (head2, 13, 2);
+	PrintFunc (head2);
+
+
 }

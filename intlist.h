@@ -7,42 +7,49 @@
 // ------------------------------------------------------------------------------------------------
 
 // <summary>
-//Aim : To implement a linked list data structure to handle integer elements.
-//The implementation consists of three files:
+// Aim : To implement a linked list data structure to handle integer elements.
+// The implementation consists of three files:
 //              intlist.h              -             the header file
 //              intlist.c              -             the code.
 //              testintlist.c          -             the program that tests the implementation.
-//The following functions have been implemented:
-//a)	Create : creates a new linked list.
-//b)	Delete :  deletes the list and all the linked elements.
-//c)	Add :  adds an element to the end of the list.
-//d)	Insert :  inserts an element at a particular index (zero based). For example, if the linked list has 4
-//elements. Calling Insert with an index of 2 will insert the new element between that at index 1 and that at index 2.
-//e)	RemoveAt : removes the element at a particular index (zero based, in the order of inputs by the user).
-//f)	Remove : removes the first occurrence of a specific element.
-//g)	Count : returns number of elements in the list.
-//h)	Get : gets the element at a particular index.
-//<\summary>
+// The following functions have been implemented:
+// a)	Create : creates a new linked list.
+// b)	Delete :  deletes all the linked elements.
+// c)	Add :  adds an element to the end of the list.
+// d)	Insert :  inserts an element at a particular index (zero based).
+// e)	RemoveAt : removes the element at a particular index (zero based).
+// f)	Remove : removes the first occurrence of a specific element.
+// g)	Count : returns number of elements in the list.
+// h)	Get : gets the element at a particular index.
+// <\summary>
 
 #ifndef INTLIST_H
 #define INTLIST_H
+#define FIN 0
+#define ERROR_MEM -1
+#define ERROR_OUT_OF_BOUNDS -2
+#define ERROR_NO_LIST -3
+#define ERROR_INVALID_INPUT -4 
 
 struct Node {
 	int value;
 	struct Node* link;
 };
 
-typedef struct Node* List;
 
-struct Node* Create ();
-void Add (List*, int val);
-void PrintFunc (List);
-void Delete (List* head);
-void Count (List* head);
-void RemoveAt (List* head, int n);
+typedef struct LinkedList {
+	struct Node* head;
+}List;
+
+List* Create ();
+int Add (List* head, int val);
+void PrintFunc (List* head);
+int Delete (List* head);
+int Count (List* head);
+int RemoveAt (List* head, int n);
 int Get (List* head, int n);
-void Remove (List* head, int n);
-void Insert (List* head, int n, int pos);
+int Remove (List* head, int n);
+int Insert (List* head, int n, int pos);
 
 #endif INTLIST_H
 
