@@ -43,7 +43,6 @@ typedef struct LinkedList {
 
 List* Create ();
 int Add (List* head, int val);
-void PrintFunc (List* head);
 int Delete (List* head);
 int Count (List* head);
 int RemoveAt (List* head, int n);

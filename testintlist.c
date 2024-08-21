@@ -9,6 +9,19 @@
 #include "intlist.h"
 #include <stdio.h>
 
+//Prints elements of the list 
+void PrintFunc (List* s) {
+	struct Node* temp = s->head;
+	if (temp != NULL) {
+		printf ("The list elements are : \n");
+		while (temp != NULL) {
+			printf ("%d -> ", temp->value);
+			temp = temp->link;
+		}
+		printf ("\n");
+	} else
+		printf ("No elements in the list\n");
+}
 
 int main () {
 	List* head = Create ();

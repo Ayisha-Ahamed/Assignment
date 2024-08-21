@@ -6,7 +6,6 @@
 // Program on main branch.
 // ------------------------------------------------------------------------------------------------
 
-#include <stdio.h>
 #include <malloc.h>
 #include "intlist.h"
 
@@ -18,20 +17,6 @@ List* Create () {
 	}
 	head->head = NULL;
 	return head;
-}
-
-//Prints elements of the list 
-void PrintFunc (List* s) {
-	struct Node* temp = s->head;
-	if (temp != NULL) {
-		printf ("The list elements are : \n");
-		while (temp != NULL) {
-			printf ("%d -> ", temp->value);
-			temp = temp->link;
-		}
-		printf ("\n");
-	} else
-		printf ("No elements in the list\n");
 }
 
 //Adds element at the end of the list
