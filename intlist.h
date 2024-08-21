@@ -36,7 +36,6 @@ struct Node {
 	struct Node* link;
 };
 
-
 typedef struct LinkedList {
 	struct Node* head;
 }List;

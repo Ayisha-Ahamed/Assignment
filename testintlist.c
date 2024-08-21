@@ -46,6 +46,4 @@ int main () {
 	PrintFunc (head);
 	Insert (head2, 13, 2);
 	PrintFunc (head2);
-
-
 }
