@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // intlist.c
-// Program on main branch.
+// Program on Linked List function definitions.
 // ------------------------------------------------------------------------------------------------
 
 #include <malloc.h>

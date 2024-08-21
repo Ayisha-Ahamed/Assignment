@@ -3,9 +3,8 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // intlist.h
-// Program on main branch.
-// ------------------------------------------------------------------------------------------------
-
+// Program on Linked List header file.
+// -------------------------------------------------------------------------------------------------
 // <summary>
 // Aim : To implement a linked list data structure to handle integer elements.
 // The implementation consists of three files:
@@ -22,6 +21,7 @@
 // g)	Count : returns number of elements in the list.
 // h)	Get : gets the element at a particular index.
 // <\summary>
+// --------------------------------------------------------------------------------------------------
 
 #ifndef INTLIST_H
 #define INTLIST_H
