@@ -26,10 +26,10 @@
 #ifndef INTLIST_H
 #define INTLIST_H
 #define FIN 0
-#define ERROR_MEM -1
-#define ERROR_OUT_OF_BOUNDS -2
-#define ERROR_NO_LIST -3
-#define ERROR_INVALID_INPUT -4 
+#define ERROR_MEM -1                  //Memory Allocation Error
+#define ERROR_OUT_OF_BOUNDS -2        //Input index position in Insert()/RemoveAt() is Invalid
+#define ERROR_NO_LIST -3              //The list is empty
+#define ERROR_INVALID_INPUT -4        //The input element in Remove() is invalid
 
 struct Node {
 	int value;

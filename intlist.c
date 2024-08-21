@@ -12,9 +12,8 @@
 //Defines head pointer as NULL and returns a List pointer
 List* Create () {
 	List* head = malloc (sizeof (List));
-	if (head == NULL) {
+	if (head == NULL) 
 		return NULL;
-	}
 	head->head = NULL;
 	return head;
 }
@@ -25,9 +24,8 @@ int Add (List* head, int val) {
 	struct Node* store = head->head;
 	if ((store) == NULL) {
 		struct Node* result = malloc (sizeof (struct Node));
-		if (result == NULL) {
+		if (result == NULL) 
 			return ERROR_MEM;
-		}
 		result->value = val;
 		result->link = NULL;
 		head->head = result;//head pointer is updated to element zero
@@ -37,9 +35,8 @@ int Add (List* head, int val) {
 		store = store->link;
 	}
 	struct Node* result = malloc (sizeof (struct Node));
-	if (result == NULL) {
+	if (result == NULL) 
 		return ERROR_MEM;
-	}
 	result->value = val;
 	result->link = NULL; //The current last element of the list
 	store->link = result; //The last element of the list is now linked to the new node ie. result
@@ -49,9 +46,9 @@ int Add (List* head, int val) {
 //Deletes the entire list
 int Delete (List* head) {
 	struct Node* store = head->head;
-	if (store == NULL) {
+	if (store == NULL) 
 		return ERROR_NO_LIST;
-	} else {
+	else {
 		struct Node* temp;
 		struct Node* temp2;
 		temp = store;
@@ -81,12 +78,10 @@ int Count (List* head) {
 int RemoveAt (List* head, int n) {
 	int count = 0;
 	int lengthOfList = Count (head);
-	if ((head->head) == NULL) {
+	if ((head->head) == NULL) 
 		return ERROR_NO_LIST;
-	}
-	if ((n < 0) || (n > (lengthOfList - 1))) {
+	if ((n < 0) || (n > (lengthOfList - 1))) 
 		return ERROR_OUT_OF_BOUNDS;
-	}
 	//To remove the last element of the list
 	if (n == (lengthOfList - 1)) {
 		struct Node* temp = head->head;
@@ -124,11 +119,13 @@ int RemoveAt (List* head, int n) {
 	};
 	//tempNext points to the next node from the element to be removed 
 	struct Node* tempNext;
-	if (n == 0) {
+	if (n == 0)
 		tempNext = NULL;
-	} else {
-		tempNext = temp->link;
-	}
+	else
+		if (temp != NULL)
+			tempNext = temp->link;
+		else
+			tempNext = NULL;
 	prev->link = tempNext;//patches the neighbouring elements
 	if (temp != NULL)
 		free (temp);
@@ -140,23 +137,25 @@ int Get (List* head, int n) {
 	struct Node* temp = head->head;
 	int lengthOfTheList = Count (head);
 	int count = 0;
-	if ((n < 0) || (n > (lengthOfTheList - 1))) {
+	if ((n < 0) || (n > (lengthOfTheList - 1))) 
 		return ERROR_OUT_OF_BOUNDS;
-	}
 	while ((count < n) && (temp != NULL)) {
 		temp = temp->link;
 		count++;
 	}
-	return temp->value;
+	if (temp != NULL)
+		return temp->value;
+	else
+		return NULL;
 }
 
 //Removes the first occurence of an element from the list
 int Remove (List* head, int n) {
 	int count = 0;
 	int indexPosition = -1;
-	if ((head->head) == NULL) {
+	if ((head->head) == NULL) 
 		return ERROR_NO_LIST;
-	} else {
+	else {
 		struct Node* temp;
 		temp = head->head;
 		while (temp != NULL) {
@@ -170,24 +169,22 @@ int Remove (List* head, int n) {
 		if (indexPosition != -1) {
 			RemoveAt (head, indexPosition);
 			return FIN;
-		} else {
+		} 
+		else 
 			return ERROR_INVALID_INPUT;
-		}
 	}
 }
 
 //Inserts element at the given index position
 int Insert (List* head, int n, int pos) {
 	int count = Count (head);
-	if ((pos > count) || (pos < 0)) {
+	if ((pos > count) || (pos < 0)) 
 		return ERROR_OUT_OF_BOUNDS;
-	}
 	struct Node* current = head->head;
 	struct Node* prev = head->head;
 	struct Node* newNode = malloc (sizeof (struct Node));
-	if ((newNode) == NULL) {
+	if ((newNode) == NULL) 
 		return ERROR_MEM;
-	}
 	newNode->value = n;
 	newNode->link = NULL;
 	//For inserting an element at the beginning of the list
@@ -198,9 +195,8 @@ int Insert (List* head, int n, int pos) {
 	}
 	//For inserting an element at the end of the list
 	if (pos == count) {
-		while ((current->link) != NULL) {
+		while ((current->link) != NULL) 
 			current = current->link;
-		}
 		current->link = newNode;
 		return FIN;
 	}
@@ -208,7 +204,8 @@ int Insert (List* head, int n, int pos) {
 		prev = current;
 		current = current->link;
 	}
-	prev->link = newNode;
+	if(prev!=NULL)
+	   prev->link = newNode;
 	newNode->link = current;
 	return FIN;
 }

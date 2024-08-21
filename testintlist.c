@@ -36,10 +36,11 @@ int main () {
 	Add (head2, 12);
 	PrintFunc (head2);
 	num = Get (head, 0);
-	printf ("From get func : %d\n", num);
+	printf ("From Get func : %d\n", num);
 	num = Count (head);
-	printf ("From count func : %d\n", num);
-	Remove (head, 4);
+	printf ("From Count func : %d\n", num);
+	num = Remove (head, 7);//Invalid Input
+	printf ("From Remove func : %d\n", num);
 	PrintFunc (head);
 	RemoveAt (head, 1);
 	PrintFunc (head);
