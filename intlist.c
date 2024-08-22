@@ -8,6 +8,14 @@
 
 #include <malloc.h>
 #include "intlist.h"
+#define f(...) DefaultParam((GetType){__VA_ARGS__})
+
+GetType DefaultParam (GetType k) {
+	GetType argument = { -1,-1 };
+	argument.error = (k.error == 0) ? k.error : -1; //-1 indicates error
+	argument.value = k.value;
+	return argument;
+}
 
 List* Create () {
 	List* head = malloc (sizeof (List));
@@ -109,17 +117,24 @@ int RemoveAt (List* head, int n) {
 	return FIN;
 }
 
-int Get (List* head, int n) {
+GetType Get (List* head, int n) {
+	GetType var;
+	var = f (-1, -1);
 	struct Node* temp = head->head;
 	int lengthOfTheList = Count (head);
 	int count = 0;
-	if ((n < 0) || (n > (lengthOfTheList - 1))) return ERROR_OUT_OF_BOUNDS;              //invalid index position
+	if ((n < 0) || (n > (lengthOfTheList - 1))) {
+		var = f (-1, ERROR_OUT_OF_BOUNDS);      //var.error is set to -1 if the index position is invalid
+		return var;
+	}
 	while ((count < n) && (temp != NULL)) {
 		temp = temp->link;
 		count++;
 	}
-	if (temp != NULL) return temp->value;
-	else return NULL;
+	if (temp != NULL) {
+		var = f (0, temp->value);
+		return var;
+	} else return var;
 }
 
 int Remove (List* head, int n) {

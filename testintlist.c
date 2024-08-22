@@ -9,7 +9,7 @@
 #include "intlist.h"
 #include <stdio.h>
 
-//Prints elements of the list 
+//Prints the elements of the list 
 void PrintFunc (List* s) {
 	struct Node* temp = s->head;
 	if (temp != NULL) {
@@ -19,45 +19,70 @@ void PrintFunc (List* s) {
 			temp = temp->link;
 		}
 		printf ("\n");
-	} 
-	else printf ("No elements in the list\n");
+	} else printf ("No elements in the list\n");
 }
 
-void ReturnFunc (int k) {
+//Prints Return value
+void PrintReturn (int k) {
 	if (k == -1)printf ("Memory allocation error\n");
 	else if (k == -2)printf ("The given index position is invalid\n");
 	else if (k == -3)printf ("List is empty\n");
 	else if (k == -4)printf ("The input is invalid\n");
-	else printf ("The output is %d\n", k);     //Could be count or get
+	else printf ("The output is %d\n", k);
+}
+
+void PrintCount (int k) {
+	printf ("The length of the list is %d\n", k);
+}
+
+//Prints the value returned by Get() function
+void PrintGet (GetType k) {
+	if (k.error == 0)
+		printf ("The integer returned by Get() is %d \n", k.value);
+	else {
+		PrintReturn (k.value);
+	}
 }
 
 int main () {
 	List* head = Create ();
-	List* head2 = Create ();
-	int num;
-	Add (head, 1);
-	Add (head, 2);
-	Add (head, 3);
-	Add (head, 4);
+
+	//Adding integers to head 
+	Add (head, -1);
+	Add (head, -2);
+	Add (head, -3);
+	Add (head, -4);
+
+	//Prints head
 	PrintFunc (head);
-	Add (head2, 11);
-	Add (head2, 12);
-	PrintFunc (head2);
-	num = Get (head, 0);
-	printf ("From Get func : %d\n", num);
-	ReturnFunc (num);
-	num = Count (head);
-	printf ("From Count func : %d\n", num);
-	ReturnFunc (num);
-	num = Remove (head, 7); 	    //Invalid Input
-	printf ("From Remove func : %d\n", num);
-	ReturnFunc (num);
-	Delete (head2);                //Deletes head 2
-	num = Remove (head2, 2);       //Operation on empty list
-	ReturnFunc (num);              //Returns list is empty
+
+	//Prints the length of the list 'head'
+	PrintCount (Count (head));
+
+	//Prints the integer/Error Code returned by Get()
+	PrintGet (Get (head, 1));
+	PrintGet (Get (head, 7));
+
+	//Inserts -2 at index position 4
+	Insert (head, -2, 4);
 	PrintFunc (head);
-	RemoveAt (head, 1);
+
+	//Removes the first occurence of -2
+	Remove (head, -2);
 	PrintFunc (head);
-	Insert (head2, 13, 0);
-	PrintFunc (head2);
+	PrintCount (Count (head));
+
+	//Removes the integer at index position 2
+	RemoveAt (head, 2);
+	PrintFunc (head);
+	PrintCount (Count (head));
+
+	//Deletes the entire list
+	Delete (head);
+	PrintFunc (head);
+	PrintCount (Count (head));
+
+
+
 }
+
