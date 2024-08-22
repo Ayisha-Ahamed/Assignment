@@ -40,8 +40,8 @@ typedef struct LinkedList {           //Structure to store head pointer
 }List;
 
 typedef struct GetError {
-	int error;                         //error
-	int value;                         //value
+	int error;                         //Indicates error in Get() function call
+	int value;                         //Stores the value/error code returned by Get()
 }GetType;
 
 /// <summary> Returns a List pointer with its head fixed to null </summary>

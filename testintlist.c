@@ -37,11 +37,8 @@ void PrintCount (int k) {
 
 //Prints the value returned by Get() function
 void PrintGet (GetType k) {
-	if (k.error == 0)
-		printf ("The integer returned by Get() is %d \n", k.value);
-	else {
-		PrintReturn (k.value);
-	}
+	if (k.error == 0) printf ("The integer returned by Get() is %d \n", k.value);
+	else PrintReturn (k.value);
 }
 
 int main () {
@@ -81,8 +78,5 @@ int main () {
 	Delete (head);
 	PrintFunc (head);
 	PrintCount (Count (head));
-
-
-
 }
 
