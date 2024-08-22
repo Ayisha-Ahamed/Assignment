@@ -36,7 +36,7 @@ void PrintCount (int k) {
 }
 
 //Prints the value returned by Get() function
-void PrintGet (GetType k) {
+void PrintGet (Type k) {
 	if (k.error == 0) printf ("The integer returned by Get() is %d \n", k.value);
 	else PrintReturn (k.value);
 }

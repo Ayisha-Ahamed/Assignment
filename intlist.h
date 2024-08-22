@@ -39,10 +39,10 @@ typedef struct LinkedList {           //Structure to store head pointer
 	struct Node* head;
 }List;
 
-typedef struct GetError {
+typedef struct Type {
 	int error;                         //Indicates error in Get() function call
 	int value;                         //Stores the value/error code returned by Get()
-}GetType;
+}Type;
 
 /// <summary> Returns a List pointer with its head fixed to null </summary>
 List* Create ();
@@ -60,7 +60,7 @@ int Count (List* head);
 int RemoveAt (List* head, int n);
 
 /// <summary> Returns the integer at a particular index position </summary>
-GetType Get (List* head, int n);
+Type Get (List* head, int n);
 
 /// <summary> Removes the first occurence of an integer </summary>
 int Remove (List* head, int n);
