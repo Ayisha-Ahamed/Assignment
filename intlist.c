@@ -37,7 +37,7 @@ int Add (List* head, int val) {
 
 int Delete (List* head) {
 	struct Node* store = head->head;
-	if (store == NULL) return ERROR_NO_LIST;         //List is empty
+	if (store == NULL) return ERROR_NO_LIST;                                            //List is empty
 	else {
 		struct Node* temp;
 		struct Node* temp2;

@@ -1,3 +1,5 @@
+#ifndef INTLIST_H
+#define INTLIST_H
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
@@ -22,9 +24,6 @@
 /// h)	Get : gets the element at a particular index.
 /// <\summary>
 // --------------------------------------------------------------------------------------------------
-
-#ifndef INTLIST_H
-#define INTLIST_H
 #define FIN 0
 #define ERROR_MEM -1                  //Memory Allocation Error
 #define ERROR_OUT_OF_BOUNDS -2        //Input index position in Insert()/RemoveAt() is Invalid
