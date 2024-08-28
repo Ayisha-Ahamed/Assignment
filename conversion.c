@@ -16,13 +16,13 @@
 
 char Arr[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };
 
-int NearestByte (int n, bool flag, int base) {
+int NearestByte (int digit, bool flag, int base) {
 	int k = 8,p = 2;
-	for (int i = 1; i <= n; i++) {
-		if (k >= n) return k;
+	for (int i = 1; i <= digit; i++) {
+		if (k >= digit) return k;
 		k *=p;                                  //Bits are of length 8,16,32 or 64
 	}
-	if ((flag == true) && (n != 0))k *= 2;
+	if ((flag == true) && (digit != 0))k *= 2;
 	if (k > 64) exit (ERROR_EXCEEDED_LENGTH);
 	return k;
 }
