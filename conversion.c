@@ -21,7 +21,6 @@ int NearestByte (int n, bool flag, int base) {
 	for (int i = 1; i <= n; i++) {
 		if (k >= n) return k;
 		k *=p;                                  //Bits are of length 8,16,32 or 64
-		printf ("%d\n",k);
 	}
 	if ((flag == true) && (n != 0))	return k * 2;
 	else return k;
@@ -115,8 +114,6 @@ char* Binary (int n) {
 	if (n == (power - 1)) {
 		flag = 1;
 	}
-	printf ("Digits : %d\n",digit);
-	printf ("NearestByte : %d\n",NearestByte (digit, flag, 2));
 	char* s = BinaryString (signOfDigit, NearestByte (digit, flag, 2), n);
 	if (s == NULL)exit (ERROR_MEM_ALLOC_FAILURE);
 	return s;
