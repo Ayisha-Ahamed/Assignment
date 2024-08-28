@@ -12,7 +12,7 @@
 #include <malloc.h>
 #pragma warning (disable:4996)
 #define ERROR_MEM_ALLOC_FAILURE -1
-#define NO_ARGS -2
+#define ERROR_EXCEEDED_LENGTH -2
 
 char Arr[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };
 
@@ -22,8 +22,9 @@ int NearestByte (int n, bool flag, int base) {
 		if (k >= n) return k;
 		k *=p;                                  //Bits are of length 8,16,32 or 64
 	}
-	if ((flag == true) && (n != 0))	return k * 2;
-	else return k;
+	if ((flag == true) && (n != 0))k *= 2;
+	if (k > 64) exit (ERROR_EXCEEDED_LENGTH);
+	return k;
 }
 
 //Returns the number of bits that will be present in the binary output
@@ -149,10 +150,12 @@ int Call (int n) {
 	return 0;
 }
 
-int main (int argc, char* argv[]) {
+int main () {
 	Call (-1024);
 	Call (-255);
 	Call (-8094);
 	Call (1023);
 	Call (-123445);
+	Call (-56767687);
+	return 0;
 }
