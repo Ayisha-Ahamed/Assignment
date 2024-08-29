@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // conversion.c
-// Program to convert the given input decimal number to Binary and Hexadecimal
+// Program to convert decimal number into binary and hexadecimal 
 // ------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,25 +13,27 @@
 #pragma warning (disable:4996)
 #define ERROR_MEM_ALLOC_FAILURE -1
 #define ERROR_EXCEEDED_LENGTH -2
+#define ERROR_INVALID_INPUT -3
 
 char Arr[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };
 
 int NearestByte (int digit, bool flag, int base) {
-	int k = 8,p = 2;
+	int k = 8, p = 2;
 	for (int i = 1; i <= digit; i++) {
 		if (k >= digit) return k;
-		k *=p;                                  //Bits are of length 8,16,32 or 64
+		k *= p;                               //Bits are of length 8,16,32 
 	}
 	if ((flag == true) && (digit != 0))k *= 2;
-	if (k > 64) exit (ERROR_EXCEEDED_LENGTH);
 	return k;
 }
 
 //Returns the number of bits that will be present in the binary output
-int Digits (int n, int base) {
+int Digits (long long int n, int base, int flag) {
 	int digit;
 	for (digit = 0; n > 0; digit++) n = n / base;
-	if (base == 2)digit += (digit % 4);        //To make bit length to be multipliers of 4 for hex conversion
+	digit += (digit % 4);                   //To make bit length to be multipliers of 4 for hex conversion
+	if (digit > 32) return ERROR_EXCEEDED_LENGTH;
+	if ((digit == 32) && (flag == 1))return ERROR_EXCEEDED_LENGTH;
 	return digit;
 }
 
@@ -56,7 +58,7 @@ int Exponent (int base, int degree) {
 }
 
 //Returns the binary equivalent of input to string
-char* BinaryString (bool y, int len, int n) {
+char* BinaryString (bool y, int len, long long int n) {
 	int i = 0;
 	char c, d;
 	int e;
@@ -92,7 +94,7 @@ char* BinaryString (bool y, int len, int n) {
 }
 
 //Converts the given input to hexadecimal
-char* Binary (int n) {
+char* Binary (long long int n) {
 	int digit;
 	long long int power;
 	bool flag = 0;                         //Flag sets if the number is of order (2**(8n)-1)
@@ -100,17 +102,19 @@ char* Binary (int n) {
 	if (n < 0) {
 		n = -n;
 		signOfDigit = 1;
-		digit = Digits (n, 2);
+		digit = Digits (n, 2, signOfDigit);
+		if (digit < 0) return NULL;
 		power = Power (digit, 2);
 		long long int b;
 		if (n == (power - 1)) {
 			flag = 1;
 			b = (n ^ ((2 * power) - 1));      //1's complement using EXOR bitwise operator 
-		} else b = (n ^ (power - 1));        
+		} else b = (n ^ (power - 1));
 		b++;                                 //2's complement i.e Incrementing 1's complement
 		n = b;
 	}
-	digit = Digits (n, 2);
+	digit = Digits (n, 2, signOfDigit);
+	if (digit < 0) return NULL;
 	power = Power (digit, 2);
 	if (n == (power - 1)) {
 		flag = 1;
@@ -121,8 +125,9 @@ char* Binary (int n) {
 }
 
 //Converts the given input to hexadecimal 
-char* Hexadecimal (int n) {
+char* Hexadecimal (long long int n) {
 	char* s = Binary (n);
+	if (s == NULL) return NULL;
 	int length = 0, sum = 0;
 	for (int i = 0; s[i] != '\0'; i++)length++;
 	char* h = malloc (sizeof (char) * ((length / 4) + 1));
@@ -142,20 +147,56 @@ char* Hexadecimal (int n) {
 }
 
 //Calling function
-int Call (int n) {
-	printf ("INPUT : %d\n", n);
-	printf ("BIN : %s \n", Binary (n));
-	printf ("HEX : %s \n", Hexadecimal (n));
+void Call (long long int n) {
+	char* bin = Binary (n);
+	char* hex = Hexadecimal (n);
+	if (bin == NULL) { 
+		printf ("The input exceeds the maximum length (32 bit)");
+		return;
+	}
+	printf ("INPUT : %lld\n", n);
+	printf ("BIN : %s \n", bin);
+	printf ("HEX : %s \n", hex);
 	printf ("\n");
-	return 0;
+	return;
 }
 
 int main () {
-	Call (-1024);
-	Call (-255);
-	Call (-8094);
-	Call (1023);
-	Call (-123445);
-	Call (-56767687);
+
+	int c;
+	char* s = malloc (sizeof (char) * 11);
+	if (s == NULL) return ERROR_MEM_ALLOC_FAILURE;
+	int i = 0;
+	printf ("Enter an integer : \n");
+	while ((c = getchar ()) != '\n') {
+		if ((i == 0) && (c == '-')) {
+			s[i] = c;
+			i++;
+		} else if ((c >= '0') && (c <= '9') && (i <= 10)) {
+			s[i] = c;
+			i++;
+		} else if (i > 10) {
+			printf ("The input exceeded maximum length\n");
+			free (s);
+			return ERROR_EXCEEDED_LENGTH;
+		} else {
+			printf ("The input is not an integer\n");
+			free (s);
+			return ERROR_INVALID_INPUT;
+		}
+
+	}
+	s[i] = '\0';
+	int num = atoi (s);
+	free (s);
+	Call (num);
+
+	//Call (-1024);
+	//Call (-255);
+	//Call (-8094);
+	//Call (1023);
+	//Call (-123445);
+	//Call (-5676768790);                      //Binary value exceeds 32 bit , returns NULL
+
 	return 0;
 }
