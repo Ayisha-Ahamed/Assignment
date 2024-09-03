@@ -20,7 +20,9 @@
 char Arr[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };    // Array of hexadecimal equivalent characters
 
 char* StoreBin;      // Global variable that stores the binary string output
-int Length;
+
+int Length;          // Global variable that stores the length of the binary string output
+
 /// <summary>Returns the nearest byte length</summary>
 int NearestByte (int digit, bool isLargestNum) {
 	int bitLen = 8;
@@ -58,13 +60,14 @@ char* BinaryString (int len, unsigned long num) {
 }
 
 /// <summary>Converts the given input to binary</summary>
-char* Binary (long int input) {
+char* Binary (int input) {
 	int digit;
 	bool largestNum = 0;                // Flag sets if the number is the largest within the given byte length ex. 256,-255
-	unsigned long num = (unsigned long)input, numCpy = num;
+	unsigned num = (unsigned)input, numCpy = num;
 	for (digit = 0; numCpy > 0; digit++) numCpy /= 2;
 	if (digit > 32) return NULL;
 	if (num == (pow (digit, 2) - 1)) largestNum = 1;
+	printf ("Digit = %d\n", digit);
 	char* binStr = BinaryString (NearestByte (digit, largestNum), num);
 	if (binStr == NULL)exit (ERROR_MEM_ALLOC_FAILURE);
 	return binStr;
@@ -93,20 +96,15 @@ void Hex (long int num) {
 }
 
 /// <summary>Prints the output of the program</summary>
-int Call (long long int input) {
+int Call (int num) {
 	StoreBin = malloc (sizeof (char) * (Length + 1));
-	if (input > 2147483647 || input < -2147483647) {
-		printf ("The input exceeds the maximum length (32 bit)\n");
-		return ERROR_EXCEEDED_LENGTH;
-	}
-	long int num = (long int)input;
 	StoreBin = Binary (num);
-	char* hex = Hexadecimal (StoreBin);
 	if (StoreBin == NULL) {
 		printf ("The input exceeds the maximum length (32 bit)\n");
 		return ERROR_EXCEEDED_LENGTH;
 	}
-	printf ("Input : %ld \nBIN : %s\nHEX : %s\n", num, StoreBin, hex);
+	char* hex = Hexadecimal (StoreBin);
+	printf ("Input : %d \nBIN : %s\nHEX : %s\n", num, StoreBin, hex);
 	free (StoreBin);
 	free (hex);
 	return 0;
@@ -132,7 +130,7 @@ int main () {
 		}
 	}
 	inStr[lenIn] = '\0';
-	long long int num = atoll (inStr);
+	int num = atoi (inStr);
 	free (inStr);
 	if (num != 0) Call (num);
 	else printf ("Input : 0 \nBIN : 00000000\nHEX : 0000\n");            // If the input is 0
