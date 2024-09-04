@@ -3,28 +3,25 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // conversion.c
-// Program to convert decimal number into binary and hexadecimal 
+// Program to convert a decimal number to binary and hexadecimal.
 // ------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <malloc.h>
+#include <limits.h>
 #pragma warning (disable:4996)
 #define ERROR_MEM_ALLOC_FAILURE -1
 #define ERROR_EXCEEDED_LENGTH -2
 #define ERROR_INVALID_INPUT -3
-
 
 char Arr[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F' };    // Array of hexadecimal equivalent characters
 
 /// <summary>Returns the nearest byte length</summary>
 int NearestByte (int digit, bool isLargestNum) {
 	int bitLen = 8;
-	for (int i = 1; i <= digit; i++) {
-		if (bitLen >= digit) break;
-		bitLen *= 2;                                                   // Bits are of length 8,16 or 32 
-	}
+	while (bitLen < digit) bitLen *= 2;
 	if (isLargestNum == true) bitLen *= 2;
 	return bitLen;
 }
@@ -49,9 +46,7 @@ char* BinaryString (bool isNegative, int len, int num) {
 	char* bin = malloc (sizeof (char) * (len + 1));
 	if (bin == NULL) return NULL;
 	bin[len] = '\0';
-	for (int i = 0; i < len; i++) {
-		bin[i] = revBin[sIndex--];
-	}
+	for (int i = 0; i < len; i++) bin[i] = revBin[sIndex--];
 	free (revBin);
 	return bin;
 }
@@ -106,11 +101,8 @@ void Hex (int num) {
 /// <summary>Prints the output of the program</summary>
 void Call (int num) {
 	char* bin = Binary (num), * hex = Hexadecimal (bin);
-	if (bin == NULL) {
-		printf ("The given negative number is too large(above 30 bits)\n");
-		return;
-	}
-	printf ("BIN : %s\nHEX : %s\n", bin, hex);
+	if (bin == NULL) printf ("The given negative number is too large(>= 31 bits)\n");
+	else printf ("BIN : %s\nHEX : %s\n", bin, hex);
 	free (bin);
 	free (hex);
 }
@@ -120,14 +112,13 @@ int main () {
 	char inStr[12];
 	printf ("Enter an integer : ");
 	while ((c = getchar ()) != '\n') {
-		if ((lenIn == 0 && c == '-') || (c >= '0' && c <= '9' && lenIn <= 10)) {        // First character can be negative, others within 0-9
-			inStr[lenIn++] = c;
-		} else if (lenIn > 10) {                                                        // Exceeds maximum bit length (32 bit)
+		if ((lenIn == 0 && c == '-') || (c >= '0' && c <= '9' && lenIn <= 10)) inStr[lenIn++] = c; // First character can be negative, others within 0-9
+		else if (lenIn > 10) {                                                                     // Exceeds maximum bit length (32 bit)
 			printf ("The input exceeded maximum length \nEnter an integer : ");
 			lenIn = 0;
 			while (c != '\n')c = getchar ();
 		} else {
-			printf ("The input is not an integer \nEnter an integer : ");                // Prints when a non-integer input is given
+			printf ("The input is not an integer \nEnter an integer : ");                            // Prints when a non-integer input is given
 			lenIn = 0;
 			while (c != '\n')c = getchar ();
 		}
@@ -136,7 +127,7 @@ int main () {
 	long long int input = atoll (inStr);
 	if (input <= INT_MAX && input >= INT_MIN) {
 		int num = (int)input;
-		if (num == 0) printf ("BIN : 00000000\nHEX : 0000\n");                           // For input = 0
+		if (num == 0) printf ("BIN : 00000000\nHEX : 0000\n");                                      // For input = 0
 		else Call (num);
 	} else printf ("The number exceedes 32 bit\n");
 	return 0;
