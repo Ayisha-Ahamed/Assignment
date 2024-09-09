@@ -2,7 +2,7 @@
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
-// ------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
 // conversion.c
 // Functions to convert a decimal number to binary and hexadecimal.
 // ------------------------------------------------------------------------------------------------
@@ -12,9 +12,7 @@
 #include <string.h>
 #include <limits.h>
 #include <stdlib.h>
-
-#define ERROR_MEM_ALLOC_FAILURE -1
-#define MAX_BIT 32   
+#include "conversion.h"
 
 /// <summary>Returns the nearest bit length</summary>
 int NearestBitLen (int digit) {
