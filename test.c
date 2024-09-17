@@ -36,8 +36,10 @@ char* Filter (char* input, bool* isNum) {
       if (i < len) return INVALID_INPUT;
       int len = strlen (str), idx = 0;
       int num = atoi (str);
-      if (len > 10 || str[0] == '-' && len > 11) return ReverseStr (str);  // For oveflow conditions the integer is taken as a string
-      if (num + 1 < num || num - 1 > num) return ReverseStr (str);         // Overflow check
+      if (len > 10 || str[0] == '-' && len > 11 || num + 1 < num || num - 1 > num) {      // For oveflow conditions the integer is taken as a string
+         *isNum = 0;
+         return ReverseStr (str);
+      }
       str = ReverseNum (num, len);
       return str;
    }
@@ -46,7 +48,7 @@ char* Filter (char* input, bool* isNum) {
 
 // Prints if the input and reversed string is a palindrome
 void PrintPal (char* input, char* reverse) {
-   if (Palindrome(input,reverse) && reverse != ERROR_MEM_ALLOC && reverse != INVALID_INPUT && reverse != EMPTY) printf (CYAN""PAL_TRUE""RESET"\n");
+   if (Palindrome (input, reverse) && reverse != ERROR_MEM_ALLOC && reverse != INVALID_INPUT && reverse != EMPTY) printf (CYAN""PAL_TRUE""RESET"\n");
    else printf (MAGENTA""PAL_FALSE""RESET"\n");
 }
 
@@ -62,7 +64,7 @@ void GetStr () {
    char* input = Filter (str, &isNum);
    if (input == INT_OVERFLOW || input == ERROR_MEM_ALLOC || input == INVALID_INPUT || input == EMPTY) {
       printf ("Error : %s\n", input);
-   } else if (isdigit (input[1])) {
+   } else if (isNum == 1) {
       printf ("Output = %s\n", input);
       PrintPal (str, input);
       free (input);
@@ -111,7 +113,7 @@ void PrintTable () {
 }
 
 void main () {
-   char choice,c;
+   char choice, c;
    PrintTable ();
    while (1) {
       printf ("\nSelect Option : \n1. Enter '1' to give input\nEnter option (Enter '2' to stop): ");
@@ -122,9 +124,9 @@ void main () {
             break;
             break;
       }
-      if(choice=='1')printf ("Do you wish to continue? (y/n) : ");
-      if ((choice = getchar ()) == 'y') { 
-         ClearScreen (); 
+      if (choice == '1')printf ("Do you wish to continue? (y/n) : ");
+      if ((choice = getchar ()) == 'y') {
+         ClearScreen ();
          while ((c = getchar ()) != '\n' && c != EOF);
       } else break;
    }

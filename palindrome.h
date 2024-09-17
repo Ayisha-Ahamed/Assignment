@@ -25,7 +25,7 @@
 #define EMPTY "Empty String"
 
 /// <summary>Returns the reversed input integer.</summary>
-char* ReverseNum (int num,int len);
+char* ReverseNum (int num, int len);
 
 /// <summary>Returns if the input string is a palindrome.</summary>
 char* ReverseStr (char* input);

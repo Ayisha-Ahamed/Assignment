@@ -25,12 +25,12 @@ char* ReverseStr (char* input) {
    int len = (int)strlen (input), rIdx = 0;
    char* revStr = malloc (sizeof (char) * (len + 1));
    if (revStr == NULL) return ERROR_MEM_ALLOC;
-   for (int i = len - 1; rIdx < len && i >= 0; i--)  revStr[rIdx++] = input[i]; 
+   for (int i = len - 1; rIdx < len && i >= 0; i--)  revStr[rIdx++] = input[i];
    revStr[len] = '\0';
    return revStr;
 }
 
-char* ReverseNum (int num,int len) {
+char* ReverseNum (int num, int len) {
    int idx = 0;
    char* revNum = malloc (sizeof (char) * (len + 1));
    if (revNum == NULL) return ERROR_MEM_ALLOC;
@@ -38,7 +38,7 @@ char* ReverseNum (int num,int len) {
    return ReverseStr (revNum);
 }
 
-bool Palindrome (char* input, char* reverse) { 
+bool Palindrome (char* input, char* reverse) {
    if (strcmp (input, reverse) == 0) return true;
    return false;
 }
