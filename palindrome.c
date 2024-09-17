@@ -6,10 +6,19 @@
 // palindrome.c
 // Program to define palindrome functions.
 // ------------------------------------------------------------------------------------------------
+
 #pragma warning(disable:4996)
 #include <string.h>
 #include <malloc.h>
+#include <stdio.h>
 #include "palindrome.h"
+#include <stdbool.h>
+
+void ClearScreen () {
+#ifdef _WIN32
+   system ("cls");
+#endif
+}
 
 char* ReverseStr (char* input) {
    if (input == NULL)return NULL;
@@ -25,12 +34,11 @@ char* ReverseNum (int num,int len) {
    int idx = 0;
    char* revNum = malloc (sizeof (char) * (len + 1));
    if (revNum == NULL) return ERROR_MEM_ALLOC;
-   while (num) { 
-      revNum[idx++] = (num % 10) + '0';
-      num /= 10;
-   }
-   revNum[len] = '\0';
-   return revNum;
+   sprintf (revNum, "%d", num);           // Converts integer to string
+   return ReverseStr (revNum);
 }
 
-
+bool Palindrome (char* input, char* reverse) { 
+   if (strcmp (input, reverse) == 0) return true;
+   return false;
+}
