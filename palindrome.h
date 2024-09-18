@@ -31,7 +31,7 @@ int ReverseNum (int num, int len);
 char* ReverseStr (char* input);
 
 /// <summary>Checks if the given input is palindrome.</summary>
-bool CheckPal (char* input, char* reverse);
+bool IsPal (char* input, char* reverse);
 
 /// <summary>Function to clear console screen.</summary>
 void ClearScreen ();

@@ -14,6 +14,7 @@
 #include "palindrome.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <limits.h>
 
 char* ReverseStr (char* input) {
    if (input == NULL)return NULL;
@@ -35,7 +36,7 @@ int ReverseNum (int num, int len) {
    return rNum;
 }
 
-bool CheckPal (char* input, char* reverse) {
+bool IsPal (char* input, char* reverse) {
    bool result = (strcmp (input, reverse) == 0) ? true : false;
    return result;
 }

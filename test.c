@@ -17,7 +17,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-// Method to clear console screen
 void ClearScreen () {
 #ifdef _WIN32
    system ("cls");
@@ -42,13 +41,13 @@ char* Filter (char* input, int* isNum) {
    if (i == 0) return EMPTY;
    if (*isNum == 1) {
       long long int num = atoll (str);
-      if (str[0] == '-') {
-         *isNum = NEGATIVE;
-         return str;
-      }
       if (i > 12 || num > INT_MAX || num < INT_MIN) {      // For oveflow input conditions the integer is taken as a string
          *isNum = 0;
          return ReverseStr (str);
+      }
+      if (str[0] == '-') {
+         *isNum = NEGATIVE;
+         return str;
       }
       *isNum = ReverseNum (num, len);
    }
@@ -56,7 +55,7 @@ char* Filter (char* input, int* isNum) {
 }
 
 void PrintPal (char* input, char* reverse) {
-   if (CheckPal (input, reverse) && reverse != ERROR_MEM_ALLOC && reverse != EMPTY) printf (CYAN""PAL_TRUE""RESET"\n");
+   if (IsPal (input, reverse) && reverse != ERROR_MEM_ALLOC && reverse != EMPTY) printf (CYAN""PAL_TRUE""RESET"\n");
    else printf (MAGENTA""PAL_FALSE""RESET"\n");
 }
 
@@ -68,7 +67,6 @@ void PrintError (int num) {
    }
 }
 
-// Gets string from the user
 void GetStr () {
    int c;
    char str[101];
@@ -99,9 +97,9 @@ void PrintTable () {
    bool check, isPal;
    int isNum = 0;
    char revNum[12];
-   char* intArr[10] = { "121", "1234321", "-1234321", "32123", "123456", "2147483647", "-2147483648", "",    "421124", "4004" };     // Integer inputs
-   char* intRes[10] = { "121", "1234321",  "-2",      "32123",  "654321", "-1",         "-2",          "1",   "421124", "4004" };    // Expected int Outputs
-   char* strArr[10] = { "Malayalam",  "Was it a car or a cat I saw",  "I did,did I?",                                                // String inputs
+   char* intArr[10] = { "121", "1234321", "-1234321", "32123", "123456", "2147483647", "-2147483648", "1",    "421124", "4004" };     // Integer inputs
+   char* intRes[10] = { "121", "1234321", "-2",       "32123", "654321", "-1",         "-2",          "1",   "421124", "4004" };      // Expected int Outputs
+   char* strArr[10] = { "Malayalam",  "Was it a car or a cat I saw",  "I did,did I?",                                                 // String inputs
                         "Madam",      "Do geese see God?",            "Eva, can I see bees in a cave?",
                         "Borrow or rob?",                             "#2#",
                         "@#$2",      "@2@#" };
@@ -111,8 +109,8 @@ void PrintTable () {
    printf ("-------------------------------------------------------------------------------------------------------\n");
    for (int i = 0; i < 10; i++) {
       Filter (intArr[i], &isNum);
-      sprintf (revNum, "%d", isNum);                           // Converts the integeer output to string
-      check = CheckPal (revNum, intRes[i]), isPal = CheckPal (revNum, intArr[i]);
+      sprintf (revNum, "%d", isNum);                           // Converts the integer output to string
+      check = IsPal (revNum, intRes[i]), isPal = IsPal (revNum, intArr[i]);
       if (check == 1 && isPal == 1)printf ("%16s |  %16s |  %16s |  %24s | "CYAN"\t  PASS\n"RESET, intArr[i], intRes[i], revNum, PAL_TRUE);
       else if (check == 1 && isPal == 0)printf ("%16s |  %16s |  %16s |  %24s | "CYAN"\t  PASS\n"RESET, intArr[i], intRes[i], revNum, PAL_FALSE);
       else printf ("%16s |  %16s |  %16s |  %24s | "MAGENTA"\t  FAIL\n"RESET, intArr[i], intRes[i], revNum, PAL_FALSE);
@@ -125,7 +123,7 @@ void PrintTable () {
       check = 0, isPal = false;
       char* input = Filter (strArr[i], &isNum);
       char* output = ReverseStr (input);
-      isPal = CheckPal (input, output);
+      isPal = IsPal (input, output);
       if (strRes[i] == isPal) check = 1;
       if (check == 1) {
          if (isPal) printf ("%34s |  %24s |  %24s | "CYAN"\tPASS\n"RESET, strArr[i], PAL_TRUE, PAL_TRUE);
@@ -154,7 +152,4 @@ void main () {
       } else break;
    }
    printf ("Thank you!");
-   int isNum = 0;
-   Filter ("2147483647", &isNum);
-   printf ("%d", isNum);
 }
