@@ -19,19 +19,19 @@
 
 #define PAL_TRUE "Palindrome"
 #define PAL_FALSE "Not a palindrome"
-#define INVALID_INPUT "Invalid input"
-#define INT_OVERFLOW "Integer overflow"
+#define NEGATIVE -2                        // Input is a negative number
+#define OVERFLOW -1                        // The reversed integer exceedes integer bounds
 #define ERROR_MEM_ALLOC "Memory Allocation Error"
 #define EMPTY "Empty String"
 
 /// <summary>Returns the reversed input integer.</summary>
-char* ReverseNum (int num, int len);
+int ReverseNum (int num, int len);
 
 /// <summary>Returns if the input string is a palindrome.</summary>
 char* ReverseStr (char* input);
 
 /// <summary>Checks if the given input is palindrome.</summary>
-bool Palindrome (char* input, char* reverse);
+bool CheckPal (char* input, char* reverse);
 
 /// <summary>Function to clear console screen.</summary>
 void ClearScreen ();

@@ -13,12 +13,7 @@
 #include <stdio.h>
 #include "palindrome.h"
 #include <stdbool.h>
-
-void ClearScreen () {
-#ifdef _WIN32
-   system ("cls");
-#endif
-}
+#include <stdlib.h>
 
 char* ReverseStr (char* input) {
    if (input == NULL)return NULL;
@@ -30,15 +25,17 @@ char* ReverseStr (char* input) {
    return revStr;
 }
 
-char* ReverseNum (int num, int len) {
-   int idx = 0;
+int ReverseNum (int num, int len) {
    char* revNum = malloc (sizeof (char) * (len + 1));
    if (revNum == NULL) return ERROR_MEM_ALLOC;
-   sprintf (revNum, "%d", num);           // Converts integer to string
-   return ReverseStr (revNum);
+   sprintf (revNum, "%d", num);                      // Converts integer to string
+   revNum = ReverseStr (revNum);
+   long long int rNum = atoll (revNum);
+   if (rNum > INT_MAX || rNum < INT_MIN) return -1;  // If the reversed number is beyond the range of int, -1 is returned
+   return rNum;
 }
 
-bool Palindrome (char* input, char* reverse) {
-   if (strcmp (input, reverse) == 0) return true;
-   return false;
+bool CheckPal (char* input, char* reverse) {
+   bool result = (strcmp (input, reverse) == 0) ? true : false;
+   return result;
 }
