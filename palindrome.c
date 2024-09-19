@@ -17,7 +17,7 @@
 #include <limits.h>
 
 char* ReverseStr (char* input) {
-   if (input == NULL)return NULL;
+   if (input == NULL) return EMPTY;
    int len = (int)strlen (input), rIdx = 0;
    char* revStr = malloc (sizeof (char) * (len + 1));
    if (revStr == NULL) return ERROR_MEM_ALLOC;
@@ -26,17 +26,15 @@ char* ReverseStr (char* input) {
    return revStr;
 }
 
-int ReverseNum (int num, int len) {
-   char* revNum = malloc (sizeof (char) * (len + 1));
-   if (revNum == NULL) return ERROR_MEM_ALLOC;
-   sprintf (revNum, "%d", num);                      // Converts integer to string
-   revNum = ReverseStr (revNum);
-   long long int rNum = atoll (revNum);
-   if (rNum > INT_MAX || rNum < INT_MIN) return -1;  // If the reversed number is beyond the range of int, -1 is returned
-   return rNum;
+int ReverseNum (int num) {
+   char numStr[12];
+   sprintf (numStr, "%d", num);                          // Converts integer to string
+   char* revNumStr = ReverseStr (numStr);
+   long long int revNum = atoll (revNumStr);
+   if (revNum > INT_MAX || revNum < INT_MIN) return -1;  // If the reversed number is beyond the range of int, -1 is returned
+   return (int) revNum;
 }
 
-bool IsPal (char* input, char* reverse) {
-   bool result = (strcmp (input, reverse) == 0) ? true : false;
-   return result;
+bool IsPalindrome (char* input, char* reverse) {
+   return (strcmp (input, reverse) == 0);
 }

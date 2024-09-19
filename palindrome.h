@@ -9,6 +9,7 @@
 // ------------------------------------------------------------------------------------------------
 #include <stdbool.h>
 
+// Color codes
 #define RED "\033[1;31m"
 #define GREEN "\033[1;32m"
 #define YELLOW "\033[1;33m"
@@ -17,21 +18,15 @@
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
 
-#define PAL_TRUE "Palindrome"
-#define PAL_FALSE "Not a palindrome"
-#define NEGATIVE -2                        // Input is a negative number
-#define OVERFLOW -1                        // The reversed integer exceedes integer bounds
-#define ERROR_MEM_ALLOC "Memory Allocation Error"
+#define OVERFLOW -1                        // Indicates the reversed integer exceeds integer bounds
+#define ERROR_MEM_ALLOC "MemAllocErr"
 #define EMPTY "Empty String"
 
 /// <summary>Returns the reversed input integer.</summary>
-int ReverseNum (int num, int len);
+int ReverseNum (int num);
 
 /// <summary>Returns if the input string is a palindrome.</summary>
 char* ReverseStr (char* input);
 
-/// <summary>Checks if the given input is palindrome.</summary>
-bool IsPal (char* input, char* reverse);
-
-/// <summary>Function to clear console screen.</summary>
-void ClearScreen ();
+/// <summary>Checks if the given string is palindrome.</summary>
+bool IsPalindrome (char* input, char* reverse);
