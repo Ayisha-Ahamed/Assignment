@@ -30,3 +30,6 @@ char* ReverseStr (char* input);
 
 /// <summary>Checks if the given string is palindrome.</summary>
 bool IsPalindrome (char* input, char* reverse);
+
+/// <summary>Filters the input string from punctuation marks.</summary>
+char* Filter (char* input, int* storeNum);
