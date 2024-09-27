@@ -8,33 +8,22 @@
 // ------------------------------------------------------------------------------------------------
 #pragma warning(disable:4996)
 #include <string.h>
-#include <malloc.h>
-#include <stdio.h>
 #include "palindrome.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <ctype.h>
 
-char* ReverseStr (char* input) {
-   if (input == NULL) return EMPTY;
-   int len = (int)strlen (input), rIdx = 0;
-   char* revStr = malloc (sizeof (char) * (len + 1));
-   if (revStr == NULL) return ERROR_MEM_ALLOC;
-   for (int i = len - 1; rIdx < len && i >= 0; i--)  revStr[rIdx++] = input[i];
-   revStr[len] = '\0';
-   return revStr;
+bool IsPalindrome (char* input) {
+   if (input[0] == '\0') return false;
+   for (int end = strlen (input) - 1, start = 0; start <= end;) if (tolower (input[start++]) != tolower (input[end--])) return false;
+   return true;
 }
 
 int ReverseNum (int num) {
-   char numStr[12];
-   sprintf (numStr, "%d", num);                          // Converts integer to string
-   char* revNumStr = ReverseStr (numStr);
-   long long int revNum = atoll (revNumStr);
-   if (num < 0) revNum = -revNum;
-   if (revNum > INT_MAX || revNum < INT_MIN) return -1;  // If the reversed number is beyond the range of int, -1 is returned
+   if (num == INT_MIN) return -1;                           // Since abs(INT_MIN) is invalid, return as overflow 
+   long long int revNum = 0;
+   for (; abs (num) > 0; num /= 10) revNum = revNum * 10 + num % 10;
+   if (revNum > INT_MAX || revNum < INT_MIN) return -1;     // If the reversed number is beyond the range of int, -1 is returned
    return (int)revNum;
-}
-
-bool IsPalindrome (char* input, char* reverse) {
-   return (strcmp (input, reverse) == 0);
 }

@@ -18,17 +18,11 @@
 #define RESET "\033[0m"
 
 #define OVERFLOW -1                        // Indicates that the reversed number exceeds integer range
-#define ERROR_MEM_ALLOC "MemAllocErr"
+#define ERROR_MEM_ALLOC "Memory Allocation Error"
 #define EMPTY "Empty String"
 
 /// <summary>Returns the reversed input integer.</summary>
 int ReverseNum (int num);
 
 /// <summary>Returns if the input string is a palindrome.</summary>
-char* ReverseStr (char* input);
-
-/// <summary>Checks if the given string is a palindrome.</summary>
-bool IsPalindrome (char* input, char* reverse);
-
-/// <summary>Filters the input string from punctuation marks.</summary>
-char* Filter (char* input, int* storeNum);
+bool IsPalindrome (char* input);
