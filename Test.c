@@ -10,7 +10,7 @@
 #pragma warning(disable:4996)
 #include <stdio.h>
 #include <stdbool.h>
-#include "palindrome.h"
+#include "Header.h"
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>

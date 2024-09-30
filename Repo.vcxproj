@@ -129,11 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="palindrome.c" />
-    <ClCompile Include="test.c" />
+    <ClCompile Include="ClassicLibrary.c" />
+    <ClCompile Include="Test.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="palindrome.h" />
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
