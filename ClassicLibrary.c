@@ -8,7 +8,6 @@
 // ------------------------------------------------------------------------------------------------
 #pragma warning(disable:4996)
 #include <string.h>
-#include "palindrome.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <limits.h>
