@@ -44,7 +44,7 @@ static void PrintResult (char* str) {
       printf ("Output =  %s\n%s\n", EMPTY, MAGENTA"Not a Palindrome"RESET);
       return;
    }
-   if (strpbrk ("abcdefghijklmnopqrstuvwxyz", input) == NULL) {               // For integer input 
+   if (strpbrk ("abcdefghijklmnopqrstuvwxyz", input) == NULL) {                                     // For integer input 
       long long int strToNum = atoll (input);
       if (strlen (str) < 12 && (strlen (input) == strlen (str) || strlen (input) + 1 == strlen (str) && str[0] == '-') && !(strToNum > INT_MAX || strToNum < INT_MIN)) {
          int num = str[0] == '-' ? -(int)strToNum : (int)strToNum, revNum = ReverseNum (num);
@@ -53,7 +53,7 @@ static void PrintResult (char* str) {
          printf ("%s\n", (revNum == num && num >= 0) ? CYAN"Palindrome"RESET : MAGENTA"Not a Palindrome"RESET);
          return;
       }
-   }                                                                         // For string input
+   }
    printf ("%s%s\n", !strcmp (str, EMPTY) ? "Output : "EMPTY"\n" : "", IsPalindrome (input) ? CYAN"Palindrome"RESET : MAGENTA"Not a Palindrome"RESET);
 }
 
@@ -66,9 +66,9 @@ static void TestReverseNum () {
    printf ("-------------------------------------------------------------------------------------------------------\n");
    for (int i = 0; i < 9; i++) {
       int fOut = (int)ReverseNum ((int)testIn[i]);
-      printf ("%16lld |  %16d |  %16d |  %24s |  %s\n", testIn[i], testOut[i], fOut,
-              (testIn[i] == fOut && fOut >= 0) ? "Palindrome" : (fOut == -1 && testIn[i] != fOut) ? "Overflow" : "Not a Palindrome",
-              fOut == testOut[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
+      char* result = (testIn[i] == fOut && fOut >= 0) ? "Palindrome" : (fOut == -1 && testIn[i] != fOut) ? "Overflow" : "Not a Palindrome";
+      char* status = fOut == testOut[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET;
+      printf ("%16lld |  %16d |  %16d |  %24s |  %s\n", testIn[i], testOut[i], fOut, result, status);
    }
    printf ("-------------------------------------------------------------------------------------------------------\n\n");
 }
@@ -77,15 +77,17 @@ static void TestReverseNum () {
 static void TestIsPalindrome () {
    char* testIn[8] = { "Malayalam" , "Was it a car or a cat I saw" , "" , "Sit on a potato pan, Otis!" ,
                        "Mr. Owl ate my metal worm.", "Eva, can I see bees in a cave?" , "Apple" , "!@#" };
-   bool testOut[8] = { 1,1,0,1,1,1,0,0 };                                   // Expected outputs in boolean
+   bool testOut[8] = { 1,1,0,1,1,1,0,0 };
    printf ("----------------------------------------"MAGENTA"Test IsPalindrome"RESET"----------------------------------------------\n");
    printf (""YELLOW "\tInput"RESET"\t\t"YELLOW"\t\tExpected Output"RESET"\t\t"YELLOW"\tActual Output"RESET"\t\t"YELLOW"Status"RESET"\n");
    printf ("-------------------------------------------------------------------------------------------------------\n");
    for (int i = 0; i < 8; i++) {
       char* input = Filter (testIn[i]);
       bool isPalindrome = IsPalindrome (input);
-      printf ("%34s |  %24s |  %24s | \t%s\n", testIn[i], testOut[i] ? "Palindrome" : "Not a Palindrome", isPalindrome ? "Palindrome" : "Not a Palindrome",
-              isPalindrome == testOut[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
+      char* expectedRes = testOut[i] ? "Palindrome" : "Not a Palindrome";
+      char* actualRes = isPalindrome ? "Palindrome" : "Not a Palindrome";
+      char* status = isPalindrome == testOut[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET;
+      printf ("%34s |  %24s |  %24s | \t%s\n", testIn[i], expectedRes, actualRes, status);
       free (input);
    }
    printf ("-------------------------------------------------------------------------------------------------------\n\n");
