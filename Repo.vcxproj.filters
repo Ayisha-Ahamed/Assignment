@@ -19,6 +19,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Test.c">
+    <ClCompile Include="hello.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
