@@ -4,8 +4,11 @@
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
-// palindrome.h
-// Program to define palindrome function definitions.
+// Header.h
+// Program on branch A4.
+// Reversal 
+// Program to check if the given input is a palindrome.
+// Returns the value of reversed integer if the reversed number is within integer bounds.
 // ------------------------------------------------------------------------------------------------
 #include <stdbool.h>
 

@@ -3,8 +3,9 @@
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
-// test.c
-// Program to test palindrome.c
+// Test.c
+// Program on branch A4.
+// Program implements test cases, gets user input and checks if its a palindrome
 // ------------------------------------------------------------------------------------------------
 
 #pragma warning(disable:4996)
@@ -28,10 +29,9 @@ static void ClearScreen () {
 /// <summary>Filters the string from non alphanumeric characters.</summary>
 static char* Filter (char* str) {
    if (str == NULL) return NULL;
-   int len = (int)strlen (str);
+   int len = (int)strlen (str), newCount = 0;
    char* filtered = malloc (sizeof (char) * (len + 1));
    if (filtered == NULL) return ERROR_MEM_ALLOC;
-   int newCount = 0;
    for (int i = 0; i < len; i++) if (isalnum (str[i])) filtered[newCount++] = tolower (str[i]);
    filtered[newCount] = '\0';
    return filtered;
@@ -59,14 +59,16 @@ static void PrintResult (char* str) {
 
 /// <summary>Tests "ReverseNum" function in palindrome.h.</summary>
 static void TestReverseNum () {
-   long long int testIn[9] = { -1 , 1234321 , 2147447412 , 123456 , 2147483646 , -123 , 421124 , 4004 , 999999999999999 };
-   int testOut[9] = { -1 , 1234321 , 2147447412 , 654321 ,    -1     , -321 , 421124 , 4004 ,-1 };
+   long long int testIn[] = { -1 , 1234321 , 2147447412 , 123456 , 2147483646 , -123 , 421124 , 4004 , 999999999999999 };
+   int testOut[] = { -1 , 1234321 , 2147447412 , 654321 ,    -1     , -321 , 421124 , 4004 ,-1 };
+   int length = sizeof (testOut) / sizeof (int);
    printf ("----------------------------------------"MAGENTA"Test ReverseNum"RESET"------------------------------------------------\n");
    printf ("\t"YELLOW"Input "RESET"\t   "YELLOW"Expected Output"RESET"  \t"YELLOW"Actual Output"RESET"\t\t  "YELLOW"Result "RESET"\t\t"YELLOW"Status"RESET"\n");
    printf ("-------------------------------------------------------------------------------------------------------\n");
-   for (int i = 0; i < 9; i++) {
+   for (int i = 0; i < length; i++) {
       int fOut = (int)ReverseNum ((int)testIn[i]);
-      char* result = (testIn[i] == fOut && fOut >= 0) ? "Palindrome" : (fOut == -1 && testIn[i] != fOut) ? "Overflow" : "Not a Palindrome";
+      bool isOverflow = (fOut == -1 && testIn[i] != fOut);
+      char* result = (testIn[i] == fOut && fOut >= 0) ? "Palindrome" : isOverflow ? "Overflow" : "Not a Palindrome";
       char* status = fOut == testOut[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET;
       printf ("%16lld |  %16d |  %16d |  %24s |  %s\n", testIn[i], testOut[i], fOut, result, status);
    }
@@ -75,13 +77,14 @@ static void TestReverseNum () {
 
 /// <summary>Tests "IsPalindrome" function in palindrome.h.</summary>
 static void TestIsPalindrome () {
-   char* testIn[8] = { "Malayalam" , "Was it a car or a cat I saw" , "" , "Sit on a potato pan, Otis!" ,
+   char* testIn[] = { "Malayalam" , "Was it a car or a cat I saw" , "" , "Sit on a potato pan, Otis!" ,
                        "Mr. Owl ate my metal worm.", "Eva, can I see bees in a cave?" , "Apple" , "!@#" };
-   bool testOut[8] = { 1,1,0,1,1,1,0,0 };
+   bool testOut[] = { 1,1,0,1,1,1,0,0 };
+   int length = sizeof (testOut) / sizeof (bool);
    printf ("----------------------------------------"MAGENTA"Test IsPalindrome"RESET"----------------------------------------------\n");
    printf (""YELLOW "\tInput"RESET"\t\t"YELLOW"\t\tExpected Output"RESET"\t\t"YELLOW"\tActual Output"RESET"\t\t"YELLOW"Status"RESET"\n");
    printf ("-------------------------------------------------------------------------------------------------------\n");
-   for (int i = 0; i < 8; i++) {
+   for (int i = 0; i < length; i++) {
       char* input = Filter (testIn[i]);
       bool isPalindrome = IsPalindrome (input);
       char* expectedRes = testOut[i] ? "Palindrome" : "Not a Palindrome";
