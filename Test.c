@@ -6,6 +6,8 @@
 // Test.c
 // Program on branch A4.
 // Program implements test cases, gets user input and checks if its a palindrome
+// Prints if the given input string is a palindrome 
+// Prints the reversed integer if the input is within INT range
 // ------------------------------------------------------------------------------------------------
 
 #pragma warning(disable:4996)
@@ -49,7 +51,7 @@ static void PrintResult (char* str) {
       if (strlen (str) < 12 && (strlen (input) == strlen (str) || strlen (input) + 1 == strlen (str) && str[0] == '-') && !(strToNum > INT_MAX || strToNum < INT_MIN)) {
          int num = str[0] == '-' ? -(int)strToNum : (int)strToNum, revNum = ReverseNum (num);
          if (revNum == -1 && strcmp (str, "-1") != 0) printf ("Output = Overflow\n");               // Checks if the function returns -1 due to Overflow or input = -1
-         else printf ("Output = %d%s\n", abs (revNum), num < 0 ? "-" : "");
+         else printf ("Reversed Number = %d%s\n", abs (revNum), num < 0 ? "-" : "");
          printf ("%s\n", (revNum == num && num >= 0) ? CYAN"Palindrome"RESET : MAGENTA"Not a Palindrome"RESET);
          return;
       }
@@ -57,7 +59,7 @@ static void PrintResult (char* str) {
    printf ("%s%s\n", !strcmp (str, EMPTY) ? "Output : "EMPTY"\n" : "", IsPalindrome (input) ? CYAN"Palindrome"RESET : MAGENTA"Not a Palindrome"RESET);
 }
 
-/// <summary>Tests "ReverseNum" function in palindrome.h.</summary>
+/// <summary>Tests ReverseNum()</summary>
 static void TestReverseNum () {
    long long int testIn[] = { -1 , 1234321 , 2147447412 , 123456 , 2147483646 , -123 , 421124 , 4004 , 999999999999999 };
    int testOut[] = { -1 , 1234321 , 2147447412 , 654321 ,    -1     , -321 , 421124 , 4004 ,-1 };
@@ -75,7 +77,7 @@ static void TestReverseNum () {
    printf ("-------------------------------------------------------------------------------------------------------\n\n");
 }
 
-/// <summary>Tests "IsPalindrome" function in palindrome.h.</summary>
+/// <summary>Tests IsPalindrome()</summary>
 static void TestIsPalindrome () {
    char* testIn[] = { "Malayalam" , "Was it a car or a cat I saw" , "" , "Sit on a potato pan, Otis!" ,
                        "Mr. Owl ate my metal worm.", "Eva, can I see bees in a cave?" , "Apple" , "!@#" };
@@ -113,19 +115,22 @@ void main () {
          while (1) {
             int c = getc (stdin);
             if (c == '\n')break;
-            char* temp = realloc (str, sizeof (char) * (count + 1) * 2);
+            char* temp = realloc (str, sizeof (char) * (count + 2));
             if (temp == NULL) {
-               free (str);
+               printf (ERROR_MEM_ALLOC);
+               if (str != NULL) free (str);
                return;
             }
             str = temp;
             str[count++] = c;
          }
-         if (str != NULL) {
+         if (str == NULL) printf (MAGENTA"Please press 'enter' after the input\n"RESET);
+         else if (count > 4000) printf (MAGENTA"The input exceeded maximum length.\n"RESET);
+         else {
             str[count] = '\0';
             PrintResult (str);
             free (str);
-         } else printf ("Please press 'enter' after the input\n");
+         }
          printf (YELLOW"Do you wish to continue? press '1' : "RESET);
          int c = getch ();
          choice = (c != '1');

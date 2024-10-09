@@ -6,8 +6,6 @@
 // ClassicLibrary.c
 // Program on branch A4.
 // Program that contains the definiton of functions defined in Header.h.
-// Returns if the given input string is a palindrome
-// Reverses the input integer and returns the same if the reversed integer is within INT range
 // ------------------------------------------------------------------------------------------------
 #pragma warning(disable:4996)
 #include <string.h>
