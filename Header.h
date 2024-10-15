@@ -25,4 +25,4 @@ void Heapify (int arr[], int length, int head);
 void HeapSort (int arr[], int length);
 
 /// <summary>Finds the index position of an element in the sorted array</summary>
-int BinarySearch (int arr[], int low, int high, int num);
+int BinarySearch (int arr[], int high, int num);

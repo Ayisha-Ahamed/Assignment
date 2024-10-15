@@ -10,10 +10,14 @@
 #include "Header.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include <conio.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+
+typedef struct {
+   int error;            // Stores the error code.
+   int num;              // Stores the input value.
+}Type;
 
 /// <summary>Windows OS specific command to clear console screen.</summary>
 static void ClearScreen () {
@@ -22,93 +26,117 @@ static void ClearScreen () {
 #endif
 }
 
-/// <summary>Checks if the input array is in ascending order.</summary>
+/// <summary>Checks if the array is in ascending order.</summary>
 bool Check (int arr[], int length) {
    for (int i = 1; i < length; i++) if (arr[i - 1] > arr[i]) return false;
    return true;
 }
 
-/// <summary>Checks if the .</summary>expected output equals the actual output.
-bool CheckTable (int input[], int output[], int length) {
-   for (int i = 0; i < length; i++)if (input[i] != output[i]) return false;
-   return true;
-};
-
-/// <summary>Prints the elements of the array.</summary>
-void PrintArray (int arr[], int length, int expLength) {
-   printf (" ");
-   for (int i = 0; i < length; i++) printf ("%7d", arr[i]);
-   int fillSpace = expLength - length;
-   while (fillSpace > 0) {
-      printf ("%7s", "");
-      fillSpace--;
-   }
+void PrintArray (int arr[], int size, int expLength) {
+   printf ("      "YELLOW"Input\t"RESET"|");
+   for (int i = 0; i < size; i++) printf ("%12d", arr[i]);
+   for (int i = expLength - size; i > 0; i--)printf ("%12s", "");
+   HeapSort (arr, size);
+   printf ("      | %4s", Check (arr, size) ? CYAN"   Pass     "RESET"\n" : MAGENTA"   Fail     "RESET"\n");
+   printf ("     "YELLOW"Output\t"RESET"|");
+   for (int i = 0; i < size; i++) printf ("%12d", arr[i]);
+   for (int i = expLength - size; i > 0; i--)printf ("%12s", "");
+   printf ("      | %12s\n", "");
 }
 
 /// <summary>Tests HeapSort().</summary>
 void TestHeapSort () {
-   int arr[8][8] = { { 1,2,3,5,4,6,7,8 } ,
-                     { 8,7,6,5,4,3,2,1 } ,
+   int arr[8][8] = { { 1,2,3,5,4,6,7,8 } , { 8,7,6,5,4,3,2,1 } ,
                      { -1,-3,-5,-9,-234,-90,-123,0 } ,
                      { 0,5,-567,67,8,2,9,124 } ,
-                     { 1,1,1,1,1,1,1,1 } ,
-                     { 2 } };
-   int expOutput[8][8] = { { 1,2,3,4,5,6,7,8 } ,
-                           { 1,2,3,4,5,6,7,8 } ,
-                           { -234,-123,-90,-9,-5,-3,-1,0 } ,
-                           { -567,0,2,5,8,9,67,124 } ,
-                           { 1,1,1,1,1,1,1,1 } ,
-                           { 2 } };
+                     { 1,1,1,1,1,1,1,1 } , { 2 } };
    int size[] = { 8,8,8,8,8,1 };
    for (int i = 0; i < 6; i++) {
-      printf ("   --------------------------------------------------------------------------------------------\n");
-      printf ("   |   "YELLOW"Input\t"RESET"|");
+      printf ("   ------------------------------------------------------------------------------------------------------------------------------------\n");
       PrintArray (arr[i], size[i], 8);
-      HeapSort (arr[i], size[i]);
-      printf ("      | %4s", CheckTable (arr[i], expOutput[i], size[i]) ? CYAN"   Pass     "RESET"|\n" : MAGENTA"   Fail     "RESET"|\n");
-      printf ("   |  "YELLOW"Output\t"RESET"|");
-      PrintArray (arr[i], size[i], 8);
-      printf ("      | %12s|\n", "");
    }
-   printf ("   --------------------------------------------------------------------------------------------\n");
+   printf ("   ------------------------------------------------------------------------------------------------------------------------------------\n");
+}
+
+/// <summary>Gets user input and returns true if 'y' is pressed.</summary>
+bool Choice () {
+   char choice[5];
+   fgets (choice, 2, stdin);
+   if (strcmp ("y", choice) == 0) return true;
+   else if (strcmp ("n", choice) == 0) return false;
+   else {
+      while (getchar () != '\n');
+      printf ("  Please enter a valid option. \n  Enter (y/n) ");
+      Choice ();
+   }
+}
+
+/// <summary>Gets integer from the user and checks if the input is valid.</summary>
+Type GetInt () {
+   char str[15], strCpy[15];
+   fgets (str, sizeof (str), stdin);
+   Type error = { 0, -1 };
+   if (str[0] == '-')strcpy (strCpy, str + 1);
+   else strcpy (strCpy, str);
+   if (strspn (strCpy, "0123456789\n") == 0) error.error = 1;                   // Checks if the input has any non-integer character
+   long long int num = atoll (str);
+   if (strlen (str) > 12 || num > INT_MAX || num < INT_MIN) error.error = 2;    // Checks if the input exceeds INT range
+   else  error.num = (int)num;
+   switch (error.error) {
+      case 1: printf (MAGENTA"  Invalid input\n"RESET); break;
+      case 2: printf (MAGENTA"  Input is out of range\n"RESET); break;
+   }
+   return error;
+}
+
+/// <summary>Prints the first index position of input element.</summary>
+void Search (int array[], int length) {
+   printf ("\n\n  Enter an integer to search : ");
+   Type search = GetInt ();
+   if (search.error == 0) {
+      int index = BinarySearch (array, length - 1, search.num);
+      if (index == -1) printf ("  The given integer doesn't exist in the array\n");
+      else printf ("  The given integer is found at index position %d\n", index);
+   }
+   printf ("  Do you wish to search another integer? (y/n) ");
+   if (Choice () == false) return;
+   while (getchar () != '\n');               // Clear input buffer
+   Search (array, length);
+}
+
+/// <summary>Gets user input and implements sort and search.</summary>
+void ManualTest () {
+   ClearScreen ();
+   while (getchar () != '\n');
+   printf ("  Enter the number of integers in the array : ");
+   Type length = GetInt ();
+   if (length.num <= 0 && length.error == 0) printf (MAGENTA"  Invalid length. A list should have atleast one element\n"RESET);
+   else if (length.error == 0) {
+      int* array = malloc (sizeof (int) * length.num);
+      if (array == NULL) return;
+      for (int index = 0; index < length.num; index++) {
+         printf ("  Enter integer %d : ", index + 1);
+         Type value = GetInt ();
+         if (value.error != 0) {
+            index--;
+            continue;
+         };
+         array[index] = value.num;
+      }
+      printf ("\n");
+      PrintArray (array, length.num, length.num);
+      Search (array, length.num);
+      free (array);
+      while (getchar () != '\n');
+   }
+   printf (YELLOW"  Do you wish to continue? (y/n) "RESET);
+   if (Choice () == true) ManualTest ();
 }
 
 void main () {
    TestHeapSort ();
-   int ch, input, num;
-   char choice[2];
-   printf ("Enter '1' to give input : ");
-   fgets (choice, 2, stdin);
-   if (strcmp ("1", choice) != 0) {
-      printf ("Exiting the program....");
-      return;
-   }
-   while (1) {
-      ClearScreen ();
-      printf ("Enter the number of elements in the array : ");
-      scanf_s ("%d", &input);
-      int* array = malloc (sizeof (int) * input);
-      if (array == NULL)return;
-      for (int i = 0; i < input; i++) {
-         int num;
-         printf ("Enter element %d : ", i + 1);
-         scanf_s ("%d", &num);
-         array[i] = num;
-      }
-      printf ("      "YELLOW"Input\t"RESET":");
-      PrintArray (array, input, input + 4);
-      HeapSort (array, input);
-      printf (" Status: %4s", Check (array, input) ? CYAN"   Pass     "RESET"\n" : MAGENTA"   Fail     "RESET"|\n");
-      printf ("     "YELLOW"Output\t"RESET":");
-      PrintArray (array, input, input + 4);
-      printf ("       %12s\n", "");
-      printf ("Enter an element to search : ");
-      scanf_s ("%d", &num);
-      int index = BinarySearch (array, 0, input, num);
-      if (index == -1) printf ("The given element doesn't exist in the array\n");
-      else printf ("The element is found at index position %d\n", index);
-      printf ("Press '1' to continue : ");
-      ch = getch ();
-      if (ch != '1') break;
-   }
+   printf (YELLOW"Do you wish to give input ? (y/n) "RESET);
+   if (Choice () == false) return;
+   ManualTest ();
+   printf (CYAN"   Thank you !!!"RESET);
 }

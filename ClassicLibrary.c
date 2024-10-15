@@ -8,6 +8,7 @@
 // Program that contains the definiton of functions defined in Header.h.
 // ------------------------------------------------------------------------------------------------
 #include "Header.h"
+
 void Swap (int* a, int* b) {
    int k = *a;
    *a = *b;
@@ -32,11 +33,15 @@ void HeapSort (int arr[], int length) {
    }
 }
 
-int BinarySearch (int arr[], int low, int high, int num) {
-   if (low > high || low == high && arr[low] != num) return INVALID_INDEX;
-   int mid = (low + high) / 2;
-   if (num == arr[mid]) return mid;
-   if (arr[mid] > num) high = mid - 1;
-   else low = mid + 1;
-   BinarySearch (arr, low, high, num);
+int BinarySearch (int arr[], int high, int num) {
+   int index = -1, low = 0;
+   while (low <= high) {
+      int mid = low + (high - low) / 2;
+      if (num == arr[mid]) {
+         index = mid;
+         high = mid - 1;
+      } else if (arr[mid] > num) high = mid - 1;
+      else low = mid + 1;
+   }
+   return index;
 };
