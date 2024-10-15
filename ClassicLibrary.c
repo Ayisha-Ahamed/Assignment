@@ -12,12 +12,11 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <ctype.h>
 #include "Header.h"
 
 bool IsPalindrome (char* input) {
    if (input[0] == '\0') return false;
-   for (int end = strlen (input) - 1, start = 0; start <= end;) if (tolower (input[start++]) != tolower (input[end--])) return false;
+   for (int end = strlen (input) - 1, start = 0; start <= end;) if (input[start++] != input[end--]) return false;
    return true;
 }
 
