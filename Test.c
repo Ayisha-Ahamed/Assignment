@@ -44,7 +44,6 @@ void PrintArray (int arr[], int size, int expLength) {
    printf ("      | %12s\n", "");
 }
 
-/// <summary>Tests HeapSort().</summary>
 void TestHeapSort () {
    int arr[8][8] = { { 1,2,3,5,4,6,7,8 } , { 8,7,6,5,4,3,2,1 } ,
                      { -1,-3,-5,-9,-234,-90,-123,0 } ,
@@ -65,7 +64,7 @@ bool Choice () {
    if (strcmp ("y", choice) == 0) return true;
    else if (strcmp ("n", choice) == 0) return false;
    else {
-      while (getchar () != '\n');
+      if (choice[0] != '\n') while (getchar () != '\n'); //-----------------------------------------------------------------------------------
       printf ("  Please enter a valid option. \n  Enter (y/n) ");
       Choice ();
    }
@@ -73,17 +72,18 @@ bool Choice () {
 
 /// <summary>Gets integer from the user and checks if the input is valid.</summary>
 Type GetInt () {
-   char str[15], strCpy[15];
+   char str[150], strCpy[150];
    fgets (str, sizeof (str), stdin);
    Type error = { 0, -1 };
    if (str[0] == '-')strcpy (strCpy, str + 1);
    else strcpy (strCpy, str);
-   if (strspn (strCpy, "0123456789\n") == 0) error.error = 1;                   // Checks if the input has any non-integer character
+   strCpy[strcspn (strCpy, "\n")] = '\0';                                     // Removes the new line character at the end of the input string
+   if (strspn (strCpy, "0123456789") == 0) error.error = 1;                   // Checks if the input has any non-integer character
    long long int num = atoll (str);
    if (strlen (str) > 12 || num > INT_MAX || num < INT_MIN) error.error = 2;    // Checks if the input exceeds INT range
    else  error.num = (int)num;
    switch (error.error) {
-      case 1: printf (MAGENTA"  Invalid input\n"RESET); break;
+      case 1: printf (MAGENTA"  Invalid input. Please provide a valid integer and press 'enter'\n"RESET); break;
       case 2: printf (MAGENTA"  Input is out of range\n"RESET); break;
    }
    return error;
@@ -91,7 +91,7 @@ Type GetInt () {
 
 /// <summary>Prints the first index position of input element.</summary>
 void Search (int array[], int length) {
-   printf ("\n\n  Enter an integer to search : ");
+   printf (BLUE"\n\n  Enter an integer to search : "RESET);
    Type search = GetInt ();
    if (search.error == 0) {
       int index = BinarySearch (array, length - 1, search.num);
@@ -123,7 +123,6 @@ void ManualTest () {
          };
          array[index] = value.num;
       }
-      printf ("\n");
       PrintArray (array, length.num, length.num);
       Search (array, length.num);
       free (array);
@@ -135,8 +134,8 @@ void ManualTest () {
 
 void main () {
    TestHeapSort ();
-   printf (YELLOW"Do you wish to give input ? (y/n) "RESET);
+   printf (YELLOW"   Do you wish to give input ? (y/n) "RESET);
    if (Choice () == false) return;
    ManualTest ();
-   printf (CYAN"   Thank you !!!"RESET);
+   printf (CYAN"  Thank you !!!"RESET);
 }

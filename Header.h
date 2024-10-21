@@ -16,8 +16,6 @@
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
 
-#define INVALID_INDEX -1
-
 /// <summary>Changes the array to max heap format</summary>
 void Heapify (int arr[], int length, int head);
 
