@@ -34,27 +34,32 @@ bool IsSorted (int arr[], int length) {
 }
 
 void PrintArray (int arr[], int size, int expLength, char* str) {
-   printf (YELLOW" %s\t"RESET"|", str);
-   for (int i = 0; i < size; i++) printf ("%12d", arr[i]);
+   printf (YELLOW" %s\t\t "RESET"|", str);
+   for (int i = 0; i < size; i++) printf ("%8d", arr[i]);
    for (int i = expLength - size; i > 0; i--) printf ("%12s", "");
 }
 
-void TestHeapSort () {
+void TestSortAndSearch () {
    int arr[8][8] = { { 1,2,3,5,4,6,7,8 } , { 8,7,6,5,4,3,2,1 } ,
                      { -1,-3,-5,-9,-234,-90,-123,0 } ,
                      { 0,5,-567,67,8,2,9,124 } ,
                      { 1,1,1,1,1,1,1,1 } , { 2 } };
    int size[] = { 8,8,8,8,8,1 };
+   int search[] = { 3,8,-9,9,1,2 };
+   int searchRes[] = { 2,7,3,5,0,0 };
    int length = sizeof (size) / sizeof (int);
    for (int i = 0; i < length; i++) {
-      printf ("   \n----------------------------------------------------------------------------------------------------------------------------\n");
+      printf ("   \n---------------------------------------------------------------------------------------\n");
       PrintArray (arr[i], size[i], 8, "Input");
       HeapSort (arr[i], size[i]);
-      printf ("      | %4s", IsSorted (arr[i], size[i]) ? CYAN"   Pass     "RESET"\n" : MAGENTA"   Fail     "RESET"\n");
+      printf ("\n");
       PrintArray (arr[i], size[i], 8, "Output");
-      printf ("      | %4s", "");
+      int index = BinarySearch (arr[i], size[i], search[i]);
+      printf ("\n"YELLOW" Search Input"RESET"  \t |\t %d", search[i] );
+      printf ("\n"YELLOW" Expected Output"RESET" |\t %d\n"YELLOW" Actual Output"RESET" \t |\t %d",searchRes[i], index);
+      printf ("\n"YELLOW" Overall Status"RESET"\t |  \t%12s", IsSorted (arr[i], size[i]) && index == searchRes[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
    }
-   printf ("   \n----------------------------------------------------------------------------------------------------------------------------\n");
+   printf ("\n---------------------------------------------------------------------------------------\n");
 }
 
 /// <summary>Gets user input and returns true if 'y' is pressed.</summary>
@@ -133,7 +138,7 @@ void ManualTest () {
 }
 
 void main () {
-   TestHeapSort ();
+   TestSortAndSearch ();
    printf (YELLOW"Do you wish to give input ? (y/n) "RESET);
    if (Choice () == false) return;
    do {
