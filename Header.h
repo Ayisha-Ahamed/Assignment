@@ -9,7 +9,6 @@
 // Assignment 5 : Implementation of heap sort and binary search
 // ------------------------------------------------------------------------------------------------
 #define YELLOW "\033[1;33m"        // Color codes
-#define BLUE "\033[1;34m"
 #define MAGENTA "\033[1;35m"
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
