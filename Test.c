@@ -31,7 +31,7 @@ void TestSortAndSearch () {
                      { -1,-3,-5,-9,-234,-90,-123,0 } ,
                      { 0,5,-567,67,8,2,9,124 } ,
                      { 1,1,1,1,1,1,1,1 } , { 2 } };
-   int size[] = { 8,8,8,8,8,1 }, search[] = { 3,8,-9,9,1,2 }, searchRes[] = { 2,7,3,5,0,0 };
+   int size[] = { 8,8,8,8,8,1 }, search[] = { 3,8,-9,9,1,5 }, searchRes[] = { 2,7,3,5,0,-1 };
    int length = sizeof (size) / sizeof (int);
    for (int i = 0; i < length; i++) {
       printf ("   \n---------------------------------------------------------------------------------------\n");
@@ -40,7 +40,7 @@ void TestSortAndSearch () {
       PrintArray (arr[i], size[i], 8, "\n Output");
       int index = BinarySearch (arr[i], size[i], search[i]);
       printf ("\n"YELLOW" Search Input"RESET"  \t |\t %d", search[i]);
-      printf ("\n"YELLOW" Expected Output"RESET" |\t %d\n"YELLOW" Actual Output"RESET" \t |\t %d", searchRes[i], index);
+      printf ("\n"YELLOW" Expected Index "RESET" |\t %d\n"YELLOW" Actual Index "RESET" \t |\t %d", searchRes[i], index);
       printf ("\n"YELLOW" Status"RESET"\t\t |  \t%12s",
               IsSorted (arr[i], size[i]) && index == searchRes[i] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
    }
