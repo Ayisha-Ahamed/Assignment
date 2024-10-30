@@ -23,9 +23,11 @@
 #define OVERFLOW -1                        // Indicates that the reversed number exceeds integer range
 #define ERROR_MEM_ALLOC "Memory Allocation Error"
 #define EMPTY "Empty String"
+#define PAL_TRUE CYAN"Palindrome"RESET
+#define PAL_FALSE MAGENTA"Not a Palindrome"RESET
 
 /// <summary>Returns the reversed input integer.</summary>
-int ReverseNum (int num);
+int ReverseNum (long long int num);
 
 /// <summary>Returns if the input string is a palindrome.</summary>
 bool IsPalindrome (char* input);
