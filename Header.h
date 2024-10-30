@@ -20,7 +20,7 @@
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
 
-#define OVERFLOW -1                        // Indicates that the reversed number exceeds integer range
+#define OVERFLOW -1
 #define ERROR_MEM_ALLOC "Memory Allocation Error"
 #define EMPTY "Empty String"
 #define PAL_TRUE CYAN"Palindrome"RESET
