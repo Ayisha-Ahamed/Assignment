@@ -16,15 +16,16 @@
 
 bool IsPalindrome (char* input) {
    if (input[0] == '\0') return false;
-   for (int end = strlen (input) - 1, start = 0; start <= end;)
+   for (int end = (int)strlen (input) - 1, start = 0; start <= end;)
       if (input[start++] != input[end--]) return false;
    return true;
 }
 
-int ReverseNum (long long int num) {
-   if (num == INT_MIN) return OVERFLOW;    // Since abs(INT_MIN) is invalid, return as overflow 
+int ReverseNum (long long int input) {
+   if (input <= INT_MIN || input > INT_MAX) return OVERFLOW;  // Since abs(INT_MIN) is invalid, return as overflow 
    long long int revNum = 0;
-   for (; abs (num) > 0; num /= 10) revNum = revNum * 10 + num % 10;
+   int num = abs ((int)input);
+   for (; num > 0; num /= 10) revNum = revNum * 10 + num % 10;
    // If the reversed number is beyond the range of int, -1 is returned
    if (revNum > INT_MAX || revNum < INT_MIN) return OVERFLOW;
    return (int)revNum;

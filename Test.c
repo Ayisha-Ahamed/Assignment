@@ -22,9 +22,17 @@
 #include <ctype.h>
 
 typedef struct {
-   char* str;
-   bool isPal;
+   char* String;
+   bool IsPal;
 }Type;
+
+void TestIsPalindrome ();
+
+void TestReverseNum ();
+
+void PrintResult (char* str);
+
+char* Filter (char* input, bool* isNumCpy); // Filters the input string from punctuations
 
 char* Filter (char* input, bool* isNumCpy) {
    // Variable num is set to 1 assuming the input is an integer.
@@ -35,7 +43,7 @@ char* Filter (char* input, bool* isNumCpy) {
    // Negative symbol in first index position of input is included in the filtered string.
    if (input[0] == '-') str[index++] = '-';
    for (int k = index; k < len; k++) {
-      if (isdigit (input[k]) == 0) isNum = false;// Check if the input character is a digit.
+      if (isNum) isNum = isdigit (input[k]); // Checks if the input character is a digit
       char ch[2] = { input[k],'\0' };
       // If the character isn't a punctuation , include character in string.
       if (strpbrk (" \'?,.-\"!;:/`~(){}[]", ch) == NULL)
@@ -56,42 +64,33 @@ char* Filter (char* input, bool* isNumCpy) {
    return str;
 }
 
-char* NumToString (int num, char* input) {
-   char* strNum = malloc (sizeof (char) * 12);
-   if (strNum == NULL) strNum = ERROR_MEM_ALLOC;
-   else if (num == -1 && strcmp (input, "-1") != 0) strNum = "Overflow";
-   else sprintf (strNum, "%d", abs (num));
-   return strNum;
-}
-
 void PrintResult (char* str) {
-   bool* isNum = false;
+   bool isNum = false;
    char* input = Filter (str, &isNum);                                     // Filtered input string
    if (!strcmp (str, "\\n") || !strcmp (str, "\\t") || !strcmp (str, "\\r") || !strcmp (input, EMPTY))
       printf ("Output =  %s\n", EMPTY"\n"PAL_FALSE);
-   else if (isNum == true) {
-      int num = atoi (input), numRev = ReverseNum (num);
-      char* reverseStr = NumToString (numRev, str);  // Converts the reversed number/ output message to a string
-      printf ("Output = %s%s\n", reverseStr, (num < 0) && strcmp (reverseStr, "Overflow") ? "-" : "");
-      printf ("%s\n", (num >= 0) && (num == numRev) ? PAL_TRUE : PAL_FALSE);
+   else if (isNum) {
+      int num = atoi (input), revNum = ReverseNum (num);
+      if (num == -1 && strcmp (input, "-1") != 0) printf ("Output = %s\n", "Overflow");
+      else printf ("Output = %d%s\n", revNum, num < 0 ? "-" : "");
+      printf ("%s\n", num == revNum ? PAL_TRUE : PAL_FALSE);
    } else
       printf ("%s\n", IsPalindrome (input) ? PAL_TRUE : PAL_FALSE);
 }
 
 void TestReverseNum () {
    long long int test[8][12] = { { 121 , 121 }, { 1234321 , 1234321 }, { 2147447412 , 2147447412 },
-                               { 123456 , 654321 }, { 2147483646 , -1 },{ -123 , -321 },
+                               { 123456 , 654321 }, { 2147483646 , -1 },{ -123 , 321 },
                                { 421124 , 421124 }, { 999999999999 , -1 } };
    printf ("------------------------------"MAGENTA"Test ReverseNum"RESET
            "-------------------------------------\n");
-   printf ("   "YELLOW"Input"RESET"      "YELLOW"Expected Output  "RESET" "YELLOW"Actual Output "RESET
-           "\t    "YELLOW"Result\t"RESET"\t"YELLOW"Status"RESET"\n");
+   printf (YELLOW"   Input      Expected Output   Actual Output        Result            Status\n"RESET);
    printf ("----------------------------------------------------------------------------------\n");
    for (int i = 0; i < 8; i++) {
       int fOut = ReverseNum (test[i][0]);
       printf ("%12lld |  %12lld |  %12d |  %18s |    %s\n",
               test[i][0], test[i][1], fOut,
-              (test[i][0] == fOut && fOut >= 0) ? "Palindrome" : "Not a Palindrome",
+              test[i][0] == fOut ? "Palindrome" : "Not a Palindrome",
               fOut == test[i][1] ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
    }
    printf ("----------------------------------------------------------------------------------\n\n");
@@ -100,60 +99,53 @@ void TestReverseNum () {
 void TestIsPalindrome () {
    Type test[] = { {"Malayalam",1} , {"Was it a car or a cat I saw",1} , {"Piano",0} ,
                    {"Sit on a potato pan, Otis!",1} , {"Mr. Owl ate my metal worm.",1} ,
-                   {"Eva, can I see bees in a cave?",1}, {"#2#",1} , {"@#$2",0},{"!;!",1 },{"{;",0 } };
+                   {"Eva, can I see bees in a cave?",1}, {"#2#",1} , {"@#$2",0},{"!;!",1 },{"{;",0 },{"12@21",1 } };
    int length = sizeof (test) / sizeof (test[0]);
    printf ("-----------------------------------"MAGENTA"Test ReverseStr"RESET
            "------------------------------------------\n");
-   printf (""YELLOW "\tInput"RESET"\t\t"YELLOW"\t\tExpected Output"RESET"\t"
-           YELLOW"\tActual Output"RESET"\t    "YELLOW"Status"RESET"\n");
+   printf (YELLOW "             Input                  Expected Output          Actual Output         Status\n"RESET);
    printf ("--------------------------------------------------------------------------------------------\n");
    for (int i = 0; i < length; i++) {
-      char* fIn = Filter (test[i].str, NULL);              // Filtered string input
+      char* fIn = Filter (test[i].String, NULL);              // Filtered string input
       bool isPalindrome = IsPalindrome (fIn);
       printf ("%30s |  %20s |  %20s |    %s\n",
-              test[i].str, test[i].isPal ? "Palindrome" : "Not a Palindrome",
+              test[i].String, test[i].IsPal ? "Palindrome" : "Not a Palindrome",
               isPalindrome ? "Palindrome" : "Not a Palindrome",
-              isPalindrome == test[i].isPal ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
+              isPalindrome == test[i].IsPal ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
    }
    printf ("--------------------------------------------------------------------------------------------\n\n");
 }
 
 void main () {
-   char entry[5];
    TestReverseNum ();
    TestIsPalindrome ();
-   printf ("\n\nDo you wish to continue? Enter '1' : ");
-   fgets (entry, 5, stdin); // To eliminate invalid inputs the input length is fixed at 5 eg : 12, 1ab,1@ etc
-   entry[strcspn (entry, "\n")] = '\0';
-   bool choice = strcmp (entry, "1");
-   while (1) {
-      if (!choice) {
-         system ("cls");
-         char* str = NULL;
-         int count = 0;
-         printf ("Enter input : ");
-         while (1) {
-            int c = getc (stdin);
-            if (c == '\n')break;
-            char* temp = realloc (str, sizeof (char) * (count + 2));
-            if (temp == NULL) {
-               printf (ERROR_MEM_ALLOC);
-               if (str != NULL) free (str);
-               return;
-            }
-            str = temp;
-            str[count++] = c;
+   bool choice = true;
+   while (choice) {
+      char* str = NULL;
+      int count = 0;
+      printf ("Enter input : ");
+      while (1) {
+         int c = getc (stdin);
+         if (c == '\n')break;
+         char* temp = realloc (str, sizeof (char) * (count + 2));
+         if (temp == NULL) {
+            printf (ERROR_MEM_ALLOC);
+            if (str != NULL) free (str);
+            return;
          }
-         if (str == NULL) printf (MAGENTA"Please press 'enter' after the input\n"RESET);
-         else if (count > 4000) printf (MAGENTA"The input exceeded maximum length.\n"RESET);
-         else {
-            str[count] = '\0';
-            PrintResult (str);
-            free (str);
-         }
-         printf (YELLOW"Do you wish to continue? press '1' : "RESET);
-         choice = (getch () != '1');
-      } else break;
+         str = temp;
+         str[count++] = c;
+      }
+      if (str == NULL) printf (MAGENTA"Please press 'enter' after the input\n"RESET);
+      else if (count > 4000) printf (MAGENTA"The input exceeded maximum length.\n"RESET);
+      else {
+         str[count] = '\0';
+         PrintResult (str);
+         free (str);
+      }
+      printf (YELLOW"Do you wish to continue? press '1' : "RESET);
+      choice = (getch () == '1');
+      system ("cls");
    }
-   printf ("\nThank you!");
+   printf (CYAN"\nThank you!"RESET);
 }
