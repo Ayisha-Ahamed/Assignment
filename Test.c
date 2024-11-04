@@ -32,50 +32,50 @@ void TestReverseNum ();
 
 void PrintResult (char* str);
 
-char* Filter (char* input, bool* isNumCpy); // Filters the input string from punctuations
+void Filter (char* input, char* output, bool* isNumCpy); // Filters the input string from punctuations
 
-char* Filter (char* input, bool* isNumCpy) {
+void Filter (char* input, char* output, bool* isNumCpy) {
    // Variable num is set to 1 assuming the input is an integer.
    int len = (int)strlen (input), index = 0, space = 0;
    bool isNum = true;
-   char* str = malloc (sizeof (char) * (len + 1));
-   if (str == NULL) return ERROR_MEM_ALLOC;
    // Negative symbol in first index position of input is included in the filtered string.
-   if (input[0] == '-') str[index++] = '-';
+   if (input[0] == '-') output[index++] = '-';
    for (int k = index; k < len; k++) {
       if (isNum) isNum = isdigit (input[k]); // Checks if the input character is a digit
       char ch[2] = { input[k],'\0' };
       // If the character isn't a punctuation , include character in string.
-      if (strpbrk (" \'?,.-\"!;:/`~(){}[]", ch) == NULL)
-         str[index++] = tolower (input[k]);
+      if (strpbrk (" \'?,.\"!;:/`~(){}[]", ch) == NULL)
+         output[index++] = tolower (input[k]);
       else if (isspace (input[k])) space++;
    }
-   str[index] = '\0';
+   output[index] = '\0';
    // Returns EMPTY if the input consists exclusively of space characters.
-   if (space == len) return EMPTY;
+   if (space == len) strcpy (output, EMPTY);
    // If the input string consists solely of punctuation characters, returns the input.
-   if (index == 0) return input;
-   if (isNum == true) {
-      long long int strToNum = atoll (str);
+   else if (index == 0) strcpy (output, input);
+   else if (isNum) {
+      long long int strToNum = atoll (output);
       // For integer overflow conditions the input is taken as a string i.e isNum = false.
       if (index > 12 || strToNum > INT_MAX || strToNum < INT_MIN) isNum = false;
    }
    if (isNumCpy != NULL) *isNumCpy = isNum;
-   return str;
 }
 
-void PrintResult (char* str) {
+void PrintResult (char* input) {
    bool isNum = false;
-   char* input = Filter (str, &isNum);                                     // Filtered input string
-   if (!strcmp (str, "\\n") || !strcmp (str, "\\t") || !strcmp (str, "\\r") || !strcmp (input, EMPTY))
+   char* filteredStr = malloc (sizeof (char) * (((int)strlen (input)) + 15));
+   if (filteredStr == NULL) return;
+   Filter (input, filteredStr, &isNum);                                     // Filtered input string
+   if (!strcmp (input, "\\n") || !strcmp (input, "\\t") || !strcmp (input, "\\r") || !strcmp (filteredStr, EMPTY))
       printf ("Output =  %s\n", EMPTY"\n"PAL_FALSE);
    else if (isNum) {
-      int num = atoi (input), revNum = ReverseNum (num);
-      if (num == -1 && strcmp (input, "-1") != 0) printf ("Output = %s\n", "Overflow");
+      int num = atoi (filteredStr), revNum = ReverseNum (num);
+      if (num == -1 && strcmp (filteredStr, "-1") != 0) printf ("Output = %s\n", "Overflow");
       else printf ("Output = %d%s\n", revNum, num < 0 ? "-" : "");
       printf ("%s\n", num == revNum ? PAL_TRUE : PAL_FALSE);
    } else
-      printf ("%s\n", IsPalindrome (input) ? PAL_TRUE : PAL_FALSE);
+      printf ("%s\n", IsPalindrome (filteredStr) ? PAL_TRUE : PAL_FALSE);
+   free (filteredStr);
 }
 
 void TestReverseNum () {
@@ -106,12 +106,15 @@ void TestIsPalindrome () {
    printf (YELLOW "             Input                  Expected Output          Actual Output         Status\n"RESET);
    printf ("--------------------------------------------------------------------------------------------\n");
    for (int i = 0; i < length; i++) {
-      char* fIn = Filter (test[i].String, NULL);              // Filtered string input
+      char* fIn = malloc (sizeof (char) * (((int)strlen (test[i].String)) + 1));
+      if (fIn == NULL) return;
+      Filter (test[i].String, fIn, NULL);              // Filtered string input
       bool isPalindrome = IsPalindrome (fIn);
       printf ("%30s |  %20s |  %20s |    %s\n",
               test[i].String, test[i].IsPal ? "Palindrome" : "Not a Palindrome",
               isPalindrome ? "Palindrome" : "Not a Palindrome",
               isPalindrome == test[i].IsPal ? CYAN"Pass"RESET : MAGENTA"Fail"RESET);
+      free (fIn);
    }
    printf ("--------------------------------------------------------------------------------------------\n\n");
 }
@@ -141,8 +144,8 @@ void main () {
       else {
          str[count] = '\0';
          PrintResult (str);
-         free (str);
       }
+      if(str != NULL) free (str);
       printf (YELLOW"Do you wish to continue? press '1' : "RESET);
       choice = (getch () == '1');
       system ("cls");
