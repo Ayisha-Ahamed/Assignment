@@ -11,6 +11,7 @@
 #define YELLOW "\033[1;33m"        // Color codes
 #define MAGENTA "\033[1;35m"
 #define CYAN "\033[1;36m"
+#define BLUE "\033[1;34m"
 #define RESET "\033[0m"
 
 /// <summary>Changes the array to max heap format.</summary>
