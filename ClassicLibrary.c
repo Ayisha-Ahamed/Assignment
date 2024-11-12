@@ -7,12 +7,13 @@
 // Program on branch A5.
 // Program that contains the definiton of functions defined in Header.h.
 // ------------------------------------------------------------------------------------------------
-#include "Header.h"
 
 void Swap (int* a, int* b) {
-   int k = *a;
-   *a = *b;
-   *b = k;
+   if (*a != *b) {
+      *a = *a + *b;
+      *b = *a - *b;
+      *a = *a - *b;
+   }
 }
 
 void Heapify (int arr[], int length, int head) {
@@ -26,10 +27,11 @@ void Heapify (int arr[], int length, int head) {
 }
 
 void HeapSort (int arr[], int length) {
-   for (int start = length / 2 - 1; start >= 0; start--) Heapify (arr, length, start);  // Constructs a max heap 
+   // Construct the unsorted array to form a Max-Heap
+   for (int start = length / 2 - 1; start >= 0; start--) Heapify (arr, length, start);
    for (int len = length - 1; len > 0; len--) {
       Swap (&arr[0], &arr[len]);
-      Heapify (arr, len, 0);                      // Change the array to max heap again
+      Heapify (arr, len, 0);      // Change the array to max heap again
    }
 }
 
