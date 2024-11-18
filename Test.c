@@ -14,26 +14,25 @@
 #include <fcntl.h>
 #include <ctype.h>
 
-#define BLACKPAWN L"\u265F"
-#define WHITEPAWN L"\u2659 "
+#define BLACKPAWN L" \u265F"
+#define WHITEPAWN L" \u2659 "
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
 
 // Function that prints and writes a string to a file
-static void Print (FILE* fp, wchar_t* string) {
-   wprintf (L"%ls", string);
-   fwprintf (fp, string);
+static void Print (FILE* fp, wchar_t* string, wchar_t* param) {
+   wchar_t* input = param == NULL ? L"" : param;
+   wchar_t str[45];
+   swprintf (str, 21, L"%ls%ls", string, input);
+   wprintf (L"%ls%ls", string, input);
+   fwprintf (fp, str);
 }
 
 static void PrintLines (FILE* fp, wchar_t* a, wchar_t* b, wchar_t* c) {
-   wprintf (L"\n%ls", a);
-   fwprintf (fp, L"\n%s", a);
-   for (int i = 0; i < 7; i++) {
-      wprintf (L"\u2501\u2501\u2501%ls", b);
-      fwprintf (fp, L"\u2501\u2501\u2501%ls", b);
-   }
-   wprintf (L"\u2501\u2501\u2501%ls", c);
-   fwprintf (fp, L"\u2501\u2501\u2501%ls", c);
+   Print (fp, L"\n", a);
+   for (int i = 0; i < 7; i++)
+      Print (fp, L"\u2501\u2501\u2501", b);
+   Print (fp, L"\u2501\u2501\u2501", c);
 }
 
 // First row of the chess board grid
@@ -53,17 +52,15 @@ static void End (FILE* fp) {
 
 // Middle column of chess board grid in between two boxes in the grid
 static void Lines (FILE* fp) {
-   Print (fp, L"\n\u2503");
+   Print (fp, L"\n\u2503", NULL);
    for (int i = 0; i < 8; i++)
-      Print (fp, L"   \u2503");
+      Print (fp, L"   \u2503", NULL);
 }
 
 static void PrintPawn (FILE* fp, wchar_t* pawn) {
-   Print (fp, L"\n\u2503");
-   for (int i = 0; i < 8; i++) {
-      wprintf (L" %ls\u2503", pawn);
-      fwprintf (fp, L" %ls\u2503", pawn);
-   }
+   Print (fp, L"\n\u2503", NULL);
+   for (int i = 0; i < 8; i++)
+      Print (fp, pawn, L"\u2503");
 }
 
 static void WhitePawn (FILE* fp) {
@@ -75,7 +72,7 @@ static void BlackPawn (FILE* fp) {
 }
 
 static void PrintChars (FILE* fp, wchar_t arr[5]) {
-   Print (fp, L"\n\u2503");
+   Print (fp, L"\n\u2503", NULL);
    for (int i = 0; i < 8; i++) {
       wprintf (L" %lc \u2503", arr[i % 5]);
       fwprintf (fp, L" %lc \u2503", arr[i % 5]);
@@ -104,14 +101,14 @@ static void Chess (FILE* fp) {
    }
 }
 
-// Returns the row and column number in which a file was last read.
+// Stores the row and column number in which a file was last read.
 // Checks if the two files are of same length.
 static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
    wchar_t refChar = getwc (ref), outChar = getwc (output);
    *row = 1, * col = 0;
    while ((refChar != WEOF) && (outChar != WEOF)) {
       *col += 1;
-      if (refChar != outChar) return -3;  // Return reference character
+      if (refChar != outChar) return -3;
       if (refChar == '\n') {
          *row += 1;
          *col = 0;
@@ -119,10 +116,10 @@ static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
       refChar = getwc (ref);
       outChar = getwc (output);
    }
-   // To check if both the output and the reference files are of same length
+   // To check if both the output and the reference files reached EOF
    if (refChar != outChar)
       return refChar != WEOF ? -1 : -2;
-   return 2; // Successful comparision of files
+   return 0;
 }
 
 int main () {
@@ -145,10 +142,10 @@ int main () {
       }
       int row, col, result = FileCompare (ref, output, &row, &col);
       switch (result) {
+         case 0: wprintf (CYAN""L"Test Passed\n"RESET); break;
          case -1: wprintf (L"Error at row %d, col %d. Output file reached EOF\n", row, col); break;
          case -2: wprintf (L"Error at row %d, col %d. "
                            "Reference file reached EOF\n", row, col); break;
-         case 2: wprintf (CYAN""L"Test Passed\n"RESET); break;
          default: wprintf (L"Error at row %d, col %d\n", row, col); break;
       }
       fclose (output);
