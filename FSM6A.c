@@ -108,7 +108,7 @@ int main (int argc, char* argv[]) {
       printf ("FSM: Error opening output file %s. ", argv[2]);
       return -1;
    }
-   // Calculating the size of the file 
+   // Calculating the size of the file
    fseek (fIn, 0L, SEEK_END);
    int size = ftell (fIn);
    // Rest the file pointer to zeroth index
