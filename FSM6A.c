@@ -4,11 +4,11 @@
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
 // FSM6A.c
-// Program on branch A6B.
+// Program on branch A6-B.
 // Program that implements identification of patterns '0110' and '1101' in a bit sequence.
 // ------------------------------------------------------------------------------------------------
 
-#define _CRT_SECURE_NO_WARNINGS  1
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <malloc.h>
 
@@ -25,58 +25,25 @@ typedef enum {
 
 // State transition diagram implementation
 static State NextState (State currentState, int input, int* output) {
+   *output = 0;
    switch (currentState) {
-      case S0:
-         *output = 0;
-         if (input == 0)
-            return S1;
-         else
-            return T1;
-
-      case S1:
-         *output = 0;
-         if (input == 1)
-            return S2;
-         else
-            return S1;
-
-      case S2:
-         *output = 0;
-         if (input == 1)
-            return S3;
-         else
-            return S1;
-
-      case S3:
-         *output = 0;
-         if (input == 0) {
-            *output = 1;
-            return T3;
-         } else
-            return T2;
-
-      case T1:
-         *output = 0;
-         if (input == 1)
-            return T2;
-         else
-            return S1;
-
-      case T2:
-         *output = 0;
-         if (input == 0)
-            return T3;
-         else
-            return T2;
-
+      case S0: return input == 0 ? S1 : T1;
+      case S1: return input == 1 ? S2 : S1;
+      case S2: return input == 1 ? S3 : S1;
+      case T1: return (input == 1) ? T2 : S1;
+      case T2: return (input == 0) ? T3 : T2;
       case T3:
          if (input == 1) {
             *output = 1;
             return S2;
-         } else {
-            *output = 0;
-            return S1;
          }
+         return S1;
+      case S3:
+         if (input == 0) {
+            *output = 1;
+            return T3;
+         }
+         return T2;
    }
    return S0;  // Default return to initial state
 }
@@ -98,20 +65,15 @@ int main (int argc, char* argv[]) {
       printf ("FSM: Usage <input.txt> <output.txt>\n");
       return -1;
    }
-   FILE* fIn = fopen (argv[1], "r");
-   if (fIn == NULL) {
-      printf ("FSM: Error opening input file %s. ", argv[1]);
+   FILE* fIn = fopen (argv[1], "r"), * fOut = fopen (argv[2], "w");
+   if (fIn == NULL || fOut == NULL) {
+      printf ("FSM: Error opening file %s\n", fIn == NULL ? argv[1] : argv[2]);
       return -1;
    }
-   FILE* fOut = fopen (argv[2], "w");
-   if (fOut == NULL) {
-      printf ("FSM: Error opening output file %s. ", argv[2]);
-      return -1;
-   }
-   // Calculating the size of the file
+   // Calculate the size of the file
    fseek (fIn, 0L, SEEK_END);
    int size = ftell (fIn);
-   // Rest the file pointer to zeroth index
+   // Reset the file pointer to zeroth index
    fseek (fIn, 0, SEEK_SET);
    char* fOutStr = malloc (size + 5);
    FSM (fIn, fOut, fOutStr);

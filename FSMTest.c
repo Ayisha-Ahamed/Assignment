@@ -13,14 +13,8 @@
 #include <malloc.h>
 #pragma warning (disable:4996)
 
-#define MAX_STR_SIZE 20
+#define MAX_STR 30
 #define NTESTS 5
-
-typedef struct {
-   char In[MAX_STR_SIZE];
-   char Out[MAX_STR_SIZE];
-   char Ref[MAX_STR_SIZE];
-}Test;
 
 static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName) {
    char* cmdline = malloc (strlen (exeFilePathAndName) + strlen (inputFilePathAndName) + strlen (outputFilePathAndName) + 3);
@@ -82,54 +76,41 @@ static int FileCompare (FILE* ref, FILE* fOut, int* bitNo) {
    }
    // To check if both the output and the reference files are of same length
    if (refChar != outChar)
-      return refChar != EOF ? -1 : -2;
+      return outChar == EOF ? -1 : -2;
    return 2; // Successful comparision of files
 }
 
 int main (int argc, char** argv) {
-   printf ("FSM Test Harness\n");
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n,", argv[0]);
       return -1;
    }
-   Test Files[] = { { "test1In.txt","test1Out.txt","test1Ref.txt" },
-                    { "test2In.txt","test2Out.txt","test2Ref.txt" },
-                    { "test3In.txt","test3Out.txt","test3Ref.txt" },
-                    { "test4In.txt","test4Out.txt","test4Ref.txt" },
-                    { "test5In.txt","test5Out.txt","test5Ref.txt" }
-   };
+   printf ("FSM Test Harness\n");
+   char input[MAX_STR], output[MAX_STR], ref[MAX_STR];
    for (int i = 0; i < NTESTS; i++) {
-      if (ExecProgram (argv[1], Files[i].In, Files[i].Out) != 0) {
+      sprintf (input, "Files/test%dIn.txt", i + 1);
+      sprintf (output, "Files/test%dOut.txt", i + 1);
+      sprintf (ref, "Files/test%dRef.txt", i + 1);
+      if (ExecProgram (argv[1], input, output) != 0)
          printf ("Error executing test %d\n", i + 1);
-      } else {
-         FILE* ref = fopen (Files[i].Ref, "r");
-         if (ref == NULL) {
-            printf ("Error opening reference file: %s\n", Files[i].Ref);
+      else {
+         FILE* fRef = fopen (ref, "r"), * fOut = fopen (output, "r");
+         if (fRef == NULL || fOut == NULL) {
+            printf ("Error opening file: %s\n", fRef == NULL ? ref : output);
             continue;
          }
-         FILE* fOut = fopen (Files[i].Out, "r");
-         if (fOut == NULL) {
-            printf ("Error opening output file: %s\n", Files[i].Out);
+         int bitNo, result = FileCompare (fRef, fOut, &bitNo);
+         if (result < 0) {    // If the reference and output files are of different length
+            printf ("Error at bit no. %d %s reached EOF\n",
+                    bitNo + 1, result == -1 ? output : ref);
             continue;
          }
-         int bitNo, result = FileCompare (ref, fOut, &bitNo);
          switch (result) {
-            case -1: {
-               printf ("Error at bit no. %d %s reached EOF\n", bitNo + 1, Files[i].Out);
-               break;
-            }
-            case -2: {
-               printf ("Error at bit no. %d %s reached EOF\n", bitNo + 1, Files[i].Ref);
-               break;
-            }
-            case 2: printf ("No error testing %s\n", Files[i].Ref); break;
-            default: {
-               printf ("Error at bit no. %d, ", bitNo);
-               printf ("Expected %d, Actual %d\n", result - '0', result == '0' ? 1 : 0);
-               break;
-            }
+            case 2: printf ("No error testing %s\n", input); break;
+            default: printf ("Error at bit no. %d, Expected %d, Actual %d\n",
+                             bitNo, result - '0', result == '0' ? 1 : 0); break;
          }
-         if (result != -1) fclose (ref);
+         if (result != -1) fclose (fRef);
          if (result != -2) fclose (fOut);
       }
    }
