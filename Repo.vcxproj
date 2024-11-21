@@ -132,6 +132,9 @@
     <ClCompile Include="FSMTest.c" />
     <ClCompile Include="FSM6A.c" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="State_Transition_Diagram.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
