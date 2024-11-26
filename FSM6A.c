@@ -27,19 +27,19 @@ typedef enum {
 static State NextState (State currentState, int input, int* output) {
    *output = 0;
    switch (currentState) {
-      case S0: return input == 0 ? S1 : T1;
-      case S1: return input == 1 ? S2 : S1;
-      case S2: return input == 1 ? S3 : S1;
-      case T1: return (input == 1) ? T2 : S1;
-      case T2: return (input == 0) ? T3 : T2;
+      case S0: return !input ? S1 : T1;
+      case S1: return input ? S2 : S1;
+      case S2: return input ? S3 : S1;
+      case T1: return input ? T2 : S1;
+      case T2: return !input ? T3 : T2;
       case T3:
-         if (input == 1) {
+         if (input) {
             *output = 1;
             return S2;
          }
          return S1;
       case S3:
-         if (input == 0) {
+         if (!input) {
             *output = 1;
             return T3;
          }
@@ -72,7 +72,7 @@ int main (int argc, char* argv[]) {
    }
    // Calculate the size of the file
    fseek (fIn, 0L, SEEK_END);
-   int size = ftell (fIn);
+   size_t size = ftell (fIn);
    // Reset the file pointer to zeroth index
    fseek (fIn, 0, SEEK_SET);
    char* fOutStr = malloc (size + 5);

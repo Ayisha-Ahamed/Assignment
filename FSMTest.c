@@ -68,7 +68,7 @@ static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, ch
 static int FileCompare (FILE* ref, FILE* fOut, int* bitNo) {
    char refChar = getc (ref), outChar = getc (fOut);
    *bitNo = 0;
-   while ((refChar != EOF) && (outChar != EOF)) {
+   while (refChar != EOF && outChar != EOF) {
       *bitNo += 1;
       if (refChar != outChar) return refChar;  // Return reference character
       refChar = getc (ref);
