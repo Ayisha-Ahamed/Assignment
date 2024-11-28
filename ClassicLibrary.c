@@ -17,9 +17,8 @@
 // We continue until heap size becomes one.
 
 
-/// <summary>
-/// Swaps the largest element (root of max heap) with the last element of the unsorted array
-/// </summary>
+/// <summary>Swaps the largest element (root of max heap) with the last element of the unsorted array</summary>
+
 void Swap (int* a, int* b) {
    if (*a != *b) {
       *a = *a + *b;
