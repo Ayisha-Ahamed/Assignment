@@ -26,10 +26,8 @@ void Swap (int* a, int* b) {
       *a = *a - *b;
    }
 }
-/// <summary>
-/// Checks the max-heap property by recursively comparing a node with its children and swapping 
-/// if necessary. It continues this process until the subtree rooted at the node is a valid max-heap
-/// </summary>
+/// <summary>Enforces the max-heap property.
+// Recursively compares a node with its children and swaps if necessary.</summary>
 void Heapify (int arr[], int length, int head) {
    int maximum = head, left = 2 * head + 1, right = 2 * head + 2;
    if (left < length && arr[left] > arr[maximum]) maximum = left;
