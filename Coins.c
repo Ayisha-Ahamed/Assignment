@@ -3,12 +3,21 @@
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
-// Test.c
-// Program on branch main
+// Coins.c
+// Program on branch Test2.2
+// Program calculates the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer
 // ------------------------------------------------------------------------------------------------
 
-#include <stdio.h>
+#include "Coins.h"
 
-int main () { 
-	printf ("Hello World!\n");
+Coins Change (int balance) {
+   Coins change = { 0,0,0,0 };
+   change.Ten += balance / 10;
+   balance %= 10;
+   change.Five += balance / 5;
+   balance %= 5;
+   change.Two += balance / 2;
+   balance %= 2;
+   change.One = balance;
+   return change;
 }
