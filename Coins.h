@@ -7,7 +7,7 @@
 // ------------------------------------------------------------------
 // Header.h
 // Program on branch Test 2.2
-// Program calculates the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer
+// Program returns the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer
 // ------------------------------------------------------------------------------------------------
 
 typedef struct {
@@ -17,7 +17,7 @@ typedef struct {
    int One;
 }Coins;
 
-/// <summary>Function returns the minimum number of coins to be handed to the customer.</summary>
+/// <summary>Returns the minimum number of coins to be handed to the customer.</summary>
 Coins Change (int balance);
 
 #endif COINS_H

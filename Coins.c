@@ -5,7 +5,7 @@
 // ------------------------------------------------------------------
 // Coins.c
 // Program on branch Test2.2
-// Program calculates the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer
+// Program returns the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer.
 // ------------------------------------------------------------------------------------------------
 
 #include "Coins.h"

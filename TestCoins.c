@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include "Coins.h"
@@ -20,16 +19,14 @@ static bool isEqual (Coins a, Coins b) {
 }
 
 static bool Choice () {
-   while (1) {
-      switch (tolower (getchar ())) {
-         case 'y': while (getchar () != '\n'); return true;
-         case 'n': while (getchar () != '\n'); return false;
-         case '\n': break;
-         default:  while (getchar () != '\n'); break;
-      }
-      printf ("Please enter (y/n) : ");
-   }
-
+   int choice;
+   do {
+      printf ("Enter (y/n) : ");
+      choice = getchar ();
+      if (choice == '\n') continue;
+      while (getchar () != '\n');
+   } while (choice != 'y' && choice != 'n');
+   return choice == 'y';
 }
 
 static void Test_Change () {
@@ -49,16 +46,16 @@ static void Test_Change () {
 }
 
 static int GetInt (char* prompt) {
-   while (1) {
-      printf ("%s", prompt);
+   while (true) {
       char input[15], * endptr = NULL;
       char newLineChar[2] = { '\n','\0' };
+      printf ("%s", prompt);
       fgets (input, 15, stdin);
       long long int num = strtoll (input, &endptr, 10);
       if (strpbrk (input, newLineChar) == NULL) while (getchar () != '\n');
       // The input range is fixed such that the maximum value that can be entered is 10,00,000
-      if (*endptr != '\n' || num < 0 || num > 1000000 || input[0] == '\n') {
-         printf ("Please enter a positive integer (0-1000k) and press 'enter' \n");
+      if (*endptr != '\n' || num < 1 || num > 1000000 || input[0] == '\n') {
+         printf ("Please enter a valid integer (1-1000k) and press 'enter' \n");
          continue;
       }
       int longToInt = (int)num;
@@ -67,29 +64,26 @@ static int GetInt (char* prompt) {
    }
 }
 
-void PrintRes (Coins input) {
-   printf (" Ten Rupee Coins : %d\n", input.Ten);
+static void PrintRes (Coins input) {
+   printf ("Ten Rupee Coins  : %d\n", input.Ten);
    printf ("Five Rupee Coins : %d\n", input.Five);
-   printf (" Two Rupee Coins : %d\n", input.Two);
-   printf (" One Rupee Coins : %d\n", input.One);
+   printf ("Two Rupee Coins  : %d\n", input.Two);
+   printf ("One Rupee Coins  : %d\n", input.One);
 }
 
 int main () {
    Test_Change ();
-   printf ("Do you wish to give manual input ? (y/n) : ");
-   bool choice = Choice ();
-   while (choice) {
+   do {
       int cost = GetInt ("\nEnter the amount to be paid to the store : ");
       int money = GetInt ("Enter the amount paid by the customer : ");
-      if (cost > money || cost < 0 || money < 0) {
+      if (cost > money || cost < 0 || money < 0)
          printf ("The cost is not fully paid. Please try again\n");
-         continue;
+      else {
+         int balance = money - cost;
+         Coins result = Change (balance);
+         PrintRes (result);
       }
-      int balance = money - cost;
-      Coins result = Change (balance);
-      PrintRes (result);
-      printf ("Do you wish to continue ? (y/n) ");
-      choice = Choice ();
-   }
+      printf ("Do you wish to continue ? ");
+   } while (Choice ());
    printf ("Thank you\n");
 }
