@@ -5,10 +5,10 @@
 // ------------------------------------------------------------------
 // ClassicLibrary.c
 // Program on branch Test1.2
-// Program performs addition, subtraction and multiplication of two complex numbers.
-// Program returns modulus and conjugate of a complex number.
+// Library to perform arithmetic operations on complex numbers.
 // ------------------------------------------------------------------------------------------------
 
+#include <stdbool.h>
 #include "Complex.h"
 #include "math.h"
 
@@ -34,6 +34,10 @@ ComplexNumber Conjugate (ComplexNumber num) {
 }
 
 double Modulus (ComplexNumber num) {
-   ComplexNumber result = Op_Mul (num, Conjugate (num));
-   return sqrt (result.Real + result.Img);
+   return sqrt (num.Real * num.Real + num.Img * num.Img);
+}
+
+bool IsEqual (ComplexNumber num1, ComplexNumber num2) {
+   // Check if difference between the two floating point numbers is negligibly small
+   return ((num1.Real - num2.Real < 0.0001) && (num1.Img - num2.Img < 0.0001));
 }
