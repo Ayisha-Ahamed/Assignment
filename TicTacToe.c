@@ -1,0 +1,128 @@
+// ------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joiners at Metamation, Batch - July 2024.
+// Copyright (c) Metamation India.
+// Ayisha Sameera,GET.
+// ------------------------------------------------------------------
+// TicTacToe.c
+// Program on branch Test3.1
+// Program implements TiTacToe with 2 or 1 player mode.
+// Program displays the board upon valid moves.
+// ------------------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <io.h>
+#include <fcntl.h>
+#include <string.h>
+
+#define DIA1 6
+#define DIA2 7
+
+static int TicTacToe (wchar_t* grid, int index, bool isPlayer1) {
+   // 3 x 3 Grid consists of three rows, three columns and two diagonals(8 possibilities)
+   static int Count[8][2] = {
+      {0,0},  // Row 1 { Count of Player 1 symbols in row1 ,Count of Player 2 symbols in row1 }
+      {0,0},  // Row 2                  .
+      {0,0},  // Row 3                  .
+      {0,0},  // Column 1               .
+      {0,0},  // Column 2               .
+      {0,0},  // Column 3               .
+      {0,0},  // Diagonal 1 (Left to right, Box positions 1-5-9)
+      {0,0}   // Disgonal 2 (Right to left, Box positions 3-5-7)
+   };
+   int rowNo = index / 3, colNo = index % 3 + 3;
+   int player = isPlayer1 ? 0 : 1;
+   Count[rowNo][player] += 1;
+   Count[colNo][player] += 1;
+   if (index % 2 == 0) {
+      switch (index) {
+         case 0: Count[DIA1][player] += 1; break;  // Diagonal 1, index positions 0-4-8
+         case 2: Count[DIA2][player] += 1; break;  // Diagonal 2, index positions 2-4-6
+         case 4: Count[DIA1][player] += 1; Count[DIA2][player] += 1; break;
+         case 6: Count[DIA2][player] += 1; break;
+         case 8: Count[DIA1][player] += 1; break;
+      }
+   }
+   if (Count[rowNo][player] >= 3 || Count[colNo][player] >= 3 ||
+       Count[DIA1][player] >= 3 || Count[DIA2][player] >= 3) return isPlayer1 ? 1 : 2;
+   return 0;
+}
+
+// Returns first non-space input character obtained from the user.
+static char Get_Input (wchar_t* prompt) {
+   char inChar[20];
+   do {
+      wprintf (L"%s ", prompt);
+      fgets (inChar, sizeof (inChar), stdin);
+      // If the input exceeds 20, clear input buffer.
+      if (inChar[strlen (inChar) - 1] != '\n') while (getchar () != '\n');
+   } while (inChar[0] == '\n' || strlen (inChar) > 2);
+   return inChar[0];
+}
+
+// Gets two non-space unique symbols to represent player 1 and 2.
+static void Get_Symbol (char* s1, char* s2) {
+   *s1 = Get_Input (L"Enter symbol 1:");
+   *s2 = Get_Input (L"Enter symbol 2:");
+   while (*s1 == *s2) *s2 = Get_Input (L"Please enter a unique symbol. Enter symbol 2:");
+}
+
+// Prints 3 x 3 game board.
+static void PrintBoard (wchar_t* grid) {
+   wprintf (L"\u250F\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2513\n\u2503");
+   for (int i = 0, l = 0; i < 3; i++) {
+      for (int k = 0; k < 3; l++, k++) wprintf (L" %wc \u2503", grid[l]);
+      if (l >= 9) break;
+      wprintf (L"\n\u2523\u2501\u2501\u2501\u254B\u2501\u2501\u2501\u254B\u2501\u2501\u2501\u252B\n\u2503");
+   }
+   wprintf (L"\n\u2517\u2501\u2501\u2501\u253B\u2501\u2501\u2501\u253B\u2501\u2501\u2501\u251B\n");
+}
+
+// Returns the index of the box number within the range of 0-8.
+static int Get_Box_Num (wchar_t* arr, bool isAutoPlay) {
+   if (isAutoPlay) {
+      int num = 4;
+      while (arr[num] != L' ') num = rand () % 9;
+      return num;
+   }
+   while (true) {
+      char boxNum = Get_Input (L"Enter box number (1-9):");
+      if (boxNum < L'1' || boxNum > L'9' || arr[boxNum - L'1'] != L' ') {
+         wprintf (L"Entered box number is either occupied or invalid\nExiting the program.....");
+         return -1;
+      }
+      return boxNum - '1';
+   }
+}
+
+static bool ModeChoice () {
+   char choice = ' ';
+   do
+      choice = Get_Input (L"Enter (1/2):");
+   while (!(choice == '1' || choice == '2'));
+   return choice == '1';
+}
+
+int main () {
+   int val = _setmode (_fileno (stdout), _O_U8TEXT);
+   wchar_t grid[9] = { L' ',L' ',L' ' ,L' ' ,L' ' ,L' ' ,L' ' ,L' ',L' ' };
+   char P1, P2;
+   Get_Symbol (&P1, &P2);
+   bool isPlayer1 = true, isAutoPlay = false;
+   wprintf (L"Enter 1 to play against the computer. Enter 2 for dual player mode.\n");
+   if (ModeChoice ()) isAutoPlay = true;
+   for (int i = 0; i < 9; i++, isPlayer1 = !isPlayer1) {
+      wprintf (L"%ls :\n", isPlayer1 ? L"Player 1" : L"Player 2");
+      int index = Get_Box_Num (grid, isAutoPlay && !isPlayer1);
+      if (index == -1) return -1;
+      grid[index] = isPlayer1 ? P1 : P2;
+      PrintBoard (grid);
+      switch (TicTacToe (grid, index, isPlayer1)) {
+         case 1: wprintf (L"\nPlayer 1 wins\n"); return 0;
+         case 2: wprintf (L"\nPlayer 2 wins\n"); return 0;
+         default: break;
+      }
+   }
+   wprintf (L"\nDraw\n");
+   return 0;
+}
