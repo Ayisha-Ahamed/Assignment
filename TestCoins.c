@@ -5,13 +5,14 @@
 // ------------------------------------------------------------------
 // TestCoins.c
 // Program on branch Test 2.2
-// Program that tests Coins.c
+// Program tests Coins.c
 // ------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "Coins.h"
 
 static bool isEqual (Coins a, Coins b) {
@@ -22,8 +23,7 @@ static bool Choice () {
    int choice;
    do {
       printf ("Enter (y/n) : ");
-      choice = getchar ();
-      if (choice == '\n') continue;
+      choice = tolower (getchar ());
       while (getchar () != '\n');
    } while (choice != 'y' && choice != 'n');
    return choice == 'y';
@@ -55,7 +55,7 @@ static int GetInt (char* prompt) {
       if (strpbrk (input, newLineChar) == NULL) while (getchar () != '\n');
       // The input range is fixed such that the maximum value that can be entered is 10,00,000
       if (*endptr != '\n' || num < 1 || num > 1000000 || input[0] == '\n') {
-         printf ("Please enter a valid integer (1-1000k) and press 'enter' \n");
+         printf ("Please enter a valid integer (1 - 10,00,000) and press 'enter' \n");
          continue;
       }
       int longToInt = (int)num;
