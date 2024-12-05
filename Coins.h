@@ -5,7 +5,7 @@
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
-// Header.h
+// Coins.h
 // Program on branch Test 2.2
 // Program returns the minimum number of 10, 5, 2 and 1 rupee coins to be handed to the customer
 // ------------------------------------------------------------------------------------------------
