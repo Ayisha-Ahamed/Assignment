@@ -6,6 +6,7 @@
 // ------------------------------------------------------------------
 // Complex.h
 // Program on branch Test1.2
+// Program performs arithmetic operations on complex numbers
 // ------------------------------------------------------------------------------------------------
 
 #include <stdbool.h>

@@ -38,6 +38,7 @@ double Modulus (ComplexNumber num) {
 }
 
 bool IsEqual (ComplexNumber num1, ComplexNumber num2) {
+   const float epsilon = 0.001f;
    // Check if difference between the two floating point numbers is negligibly small
-   return ((num1.Real - num2.Real < 0.0001) && (num1.Img - num2.Img < 0.0001));
+   return ((num1.Real - num2.Real < epsilon) && (num1.Img - num2.Img < epsilon));
 }
