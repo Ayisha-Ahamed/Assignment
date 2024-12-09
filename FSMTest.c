@@ -100,12 +100,9 @@ int main (int argc, char** argv) {
             continue;
          }
          int bitNo, result = FileCompare (fRef, fOut, &bitNo);
-         if (result < 0) {    // If the reference and output files are of different length
-            printf ("Error at bit no. %d %s reached EOF\n",
-                    bitNo + 1, result == -1 ? output : ref);
-            continue;
-         }
          switch (result) {
+            case -1: case -2: printf ("Error at bit no. %d %s reached EOF\n",
+                                      bitNo + 1, result == -1 ? output : ref); break;
             case 2: printf ("No error testing %s\n", input); break;
             default: printf ("Error at bit no. %d, Expected %d, Actual %d\n",
                              bitNo, result - '0', result == '0' ? 1 : 0); break;

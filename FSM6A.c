@@ -27,23 +27,19 @@ typedef enum {
 static State NextState (State currentState, int input, int* output) {
    *output = 0;
    switch (currentState) {
-      case S0: return !input ? S1 : T1;
+      case S0: return input ? T1 : S1;
       case S1: return input ? S2 : S1;
       case S2: return input ? S3 : S1;
       case T1: return input ? T2 : S1;
-      case T2: return !input ? T3 : T2;
+      case T2: return input ? T2 : T3;
       case T3:
-         if (input) {
-            *output = 1;
-            return S2;
-         }
-         return S1;
+         if (!input) return S1;
+         *output = 1;
+         return S2;
       case S3:
-         if (!input) {
-            *output = 1;
-            return T3;
-         }
-         return T2;
+         if (input) return T2;
+         *output = 1;
+         return T3;
    }
    return S0;  // Default return to initial state
 }
