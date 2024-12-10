@@ -6,7 +6,7 @@
 // ------------------------------------------------------------------
 // Header.h
 // Program on branch A5.
-// Assignment 5 : Implementation of heap sort and binary search
+// Implementation of heap sort and binary search.
 // ------------------------------------------------------------------------------------------------
 
 #define YELLOW "\033[1;33m"        // Color codes

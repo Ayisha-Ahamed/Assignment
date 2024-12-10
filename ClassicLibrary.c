@@ -5,7 +5,7 @@
 // ------------------------------------------------------------------
 // ClassicLibrary.c
 // Program on branch A5.
-// Program that contains the definiton of functions defined in Header.h.
+// Library to implement heap sort and binary search.
 // ------------------------------------------------------------------------------------------------
 
 // Heap Sort inserts elements from an unsorted array into a max heap.A Max Heap is a complete 
@@ -16,18 +16,15 @@
 // This swap breaks the max heap property so we "heapify" it again. 
 // We continue until heap size becomes one.
 
-
-/// <summary>Swaps the largest element (root of max heap) with the last element of the unsorted array</summary>
-
+/// <summary>Swaps the largest element with the last element of the unsorted array.</summary>
 void Swap (int* a, int* b) {
-   if (*a != *b) {
-      *a = *a + *b;
-      *b = *a - *b;
-      *a = *a - *b;
-   }
+   if (*a == *b) return;
+   *a = *a + *b;
+   *b = *a - *b;
+   *a = *a - *b;
 }
-/// <summary>Enforces the max-heap property.
-// Recursively compares a node with its children and swaps if necessary.</summary>
+
+/// <summary>Recursively compares a node with its children and swaps if necessary.</summary>
 void Heapify (int arr[], int length, int head) {
    int maximum = head, left = 2 * head + 1, right = 2 * head + 2;
    if (left < length && arr[left] > arr[maximum]) maximum = left;
@@ -38,13 +35,10 @@ void Heapify (int arr[], int length, int head) {
    }
 }
 
-/// <summary>
-/// Constructs the array into a max heap and recursively swaps the root with the last position of 
-/// the unsorted array
-/// </summary>
+/// <summary>Constructs the array into a max heap.</summary>
 void HeapSort (int arr[], int length) {
-   // The unsorted array is constructed to max heap by running heapify from the lowest node towards 
-   // the root of the heap. Number of nodes is of order O(log n).
+   // Max heap is formed by running heapify from the lowest node towards the root of the heap.
+   // Number of nodes is of order O(log n).
    for (int start = length / 2 - 1; start >= 0; start--) Heapify (arr, length, start);
    for (int len = length - 1; len > 0; len--) {
       // Swap the root of the heap with the last element of the array.
@@ -58,10 +52,8 @@ int BinarySearch (int arr[], int high, int num) {
    int index = -1, low = 0;
    while (low <= high) {
       int mid = low + (high - low) / 2;
-      if (num == arr[mid]) {
-         index = mid;
-         high = mid - 1;
-      } else if (arr[mid] > num) high = mid - 1;
+      if (num == arr[mid]) return mid;
+      else if (arr[mid] > num) high = mid - 1;
       else low = mid + 1;
    }
    return index;
