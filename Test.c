@@ -7,12 +7,12 @@
 // Program on branch A6.
 // Program to print chess board.
 // ------------------------------------------------------------------------------------------------
-
 #pragma warning (disable:4996)
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #define BLACKPAWN L" \u265F"
 #define WHITEPAWN L" \u2659 "
@@ -35,73 +35,36 @@ static void PrintLines (FILE* fp, wchar_t* a, wchar_t* b, wchar_t* c) {
    Print (fp, L"\u2501\u2501\u2501", c);
 }
 
-// First row of the chess board grid
-static void Start (FILE* fp) {
-   PrintLines (fp, L"\u250F", L"\u2533", L"\u2513");
-}
-
-// Middle row of chess board grid in between the boxes above and below
-static void Middle (FILE* fp) {
-   PrintLines (fp, L"\u2523", L"\u254B", L"\u252B");
-}
-
-// Last row of the chess board grid
-static void End (FILE* fp) {
-   PrintLines (fp, L"\u2517", L"\u253B", L"\u251B");
-}
-
-// Middle column of chess board grid in between two boxes in the grid
-static void Lines (FILE* fp) {
-   Print (fp, L"\n\u2503", NULL);
-   for (int i = 0; i < 8; i++)
-      Print (fp, L"   \u2503", NULL);
-}
-
 static void PrintPawn (FILE* fp, wchar_t* pawn) {
    Print (fp, L"\n\u2503", NULL);
    for (int i = 0; i < 8; i++)
       Print (fp, pawn, L"\u2503");
 }
 
-static void WhitePawn (FILE* fp) {
-   PrintPawn (fp, WHITEPAWN);
-}
-
-static void BlackPawn (FILE* fp) {
-   PrintPawn (fp, BLACKPAWN);
-}
-
-static void PrintChars (FILE* fp, wchar_t arr[5]) {
+static void PrintChars (FILE* fp, bool isBlack) {
+   wchar_t White[5] = { L'\u2656',L'\u2658',L'\u2657',L'\u2655',L'\u2654' };
+   wchar_t Black[5] = { L'\u265C',L'\u265E',L'\u265D',L'\u265B',L'\u265A' };
+   wchar_t* arr = isBlack ? Black : White;
    Print (fp, L"\n\u2503", NULL);
    for (int i = 0; i < 8; i++) {
       wprintf (L" %lc \u2503", arr[i % 5]);
       fwprintf (fp, L" %lc \u2503", arr[i % 5]);
-   }
-}
-
-static void WhiteChars (FILE* fp) {
-   wchar_t White[5] = { L'\u2656',L'\u2658',L'\u2657',L'\u2655',L'\u2654' };
-   PrintChars (fp, White);
-}
-
-static void BlackChars (FILE* fp) {
-   wchar_t Black[5] = { L'\u265C',L'\u265E',L'\u265D',L'\u265B',L'\u265A' };
-   PrintChars (fp, Black);
+   };
 }
 
 static void Chess (FILE* fp) {
+   PrintLines (fp, L"\u250F", L"\u2533", L"\u2513");
    for (int i = 0; i < 8; i++) {
       switch (i) {
-         case 0: Start (fp); BlackChars (fp); Middle (fp); break;
-         case 1: BlackPawn (fp); Middle (fp); break;
-         case 6: WhitePawn (fp); Middle (fp); break;
-         case 7: WhiteChars (fp); End (fp); break;
-         default: Lines (fp); Middle (fp); break;
+         case 0: PrintChars (fp, true); PrintLines (fp, L"\u2523", L"\u254B", L"\u252B"); break;
+         case 1: PrintPawn (fp, BLACKPAWN); PrintLines (fp, L"\u2523", L"\u254B", L"\u252B"); break;
+         case 6: PrintPawn (fp, WHITEPAWN); PrintLines (fp, L"\u2523", L"\u254B", L"\u252B"); break;
+         case 7: PrintChars (fp, false); PrintLines (fp, L"\u2517", L"\u253B", L"\u251B"); break;
+         default: PrintPawn (fp, L"   "); PrintLines (fp, L"\u2523", L"\u254B", L"\u252B"); break;
       }
    }
 }
 
-// Stores the row and column number in which a file was last read.
 // Checks if the two files are of same length.
 static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
    wchar_t refChar = getwc (ref), outChar = getwc (output);
@@ -124,9 +87,9 @@ static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
 
 int main () {
    int k = _setmode (_fileno (stdout), _O_U8TEXT);
-   FILE* output = fopen ("Chess.txt", "w+,ccs=UTF-8");
-   if (output == NULL) {
-      wprintf (L"Failed to open Chess.txt\n");
+   FILE* output = fopen ("Chess.txt", "w+,ccs=UTF-8"), * ref = fopen ("Chess_Ref.txt", "r+,ccs=UTF-8");
+   if (output == NULL || ref == NULL) {
+      wprintf (L"Failed to open file(s)\n");
       return -1;
    }
    Chess (output);
@@ -135,17 +98,12 @@ int main () {
    int c = getchar ();
    if (tolower (c) == 'y') {
       output = fopen ("Chess.txt", "r+,ccs=UTF-8");
-      FILE* ref = fopen ("Chess_Ref.txt", "r+,ccs=UTF-8");
-      if (ref == NULL) {
-         wprintf (L"Failed to open reference file\n");
-         return -1;
-      }
       int row, col, result = FileCompare (ref, output, &row, &col);
       switch (result) {
          case 0: wprintf (CYAN""L"Test Passed\n"RESET); break;
          case -1: wprintf (L"Error at row %d, col %d. Output file reached EOF\n", row, col); break;
-         case -2: wprintf (L"Error at row %d, col %d. "
-                           "Reference file reached EOF\n", row, col); break;
+         case -2: wprintf (L"Error at row %d, col %d. Reference file reached EOF\n",
+                           row, col); break;
          default: wprintf (L"Error at row %d, col %d\n", row, col); break;
       }
       fclose (output);
