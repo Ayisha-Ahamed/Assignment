@@ -1,4 +1,4 @@
-// ------------------------------------------------------------------------------------------------
+﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // Ayisha Sameera,GET.
@@ -18,7 +18,7 @@
 #define DIA1 6
 #define DIA2 7
 
-static int TicTacToe (wchar_t* grid, int index, bool isPlayer1) {
+static int TicTacToe (char* grid, int index, int Player) {
    // 3 x 3 Grid consists of three rows, three columns and two diagonals(8 possibilities)
    static int Count[8][2] = {
       {0,0},  // Row 1 { Count of Player 1 symbols in row1 ,Count of Player 2 symbols in row1 }
@@ -31,7 +31,7 @@ static int TicTacToe (wchar_t* grid, int index, bool isPlayer1) {
       {0,0}   // Disgonal 2 (Right to left, Box positions 3-5-7)
    };
    int rowNo = index / 3, colNo = index % 3 + 3;
-   int player = isPlayer1 ? 0 : 1;
+   int player = Player - 1;
    Count[rowNo][player] += 1;
    Count[colNo][player] += 1;
    if (index % 2 == 0) {
@@ -44,7 +44,7 @@ static int TicTacToe (wchar_t* grid, int index, bool isPlayer1) {
       }
    }
    if (Count[rowNo][player] >= 3 || Count[colNo][player] >= 3 ||
-       Count[DIA1][player] >= 3 || Count[DIA2][player] >= 3) return isPlayer1 ? 1 : 2;
+       Count[DIA1][player] >= 3 || Count[DIA2][player] >= 3) return Player;
    return 0;
 }
 
@@ -68,18 +68,17 @@ static void Get_Symbol (char* s1, char* s2) {
 }
 
 // Prints 3 x 3 game board.
-static void PrintBoard (wchar_t* grid) {
-   wprintf (L"\u250F\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2513\n\u2503");
-   for (int i = 0, l = 0; i < 3; i++) {
-      for (int k = 0; k < 3; l++, k++) wprintf (L" %wc \u2503", grid[l]);
-      if (l >= 9) break;
-      wprintf (L"\n\u2523\u2501\u2501\u2501\u254B\u2501\u2501\u2501\u254B\u2501\u2501\u2501\u252B\n\u2503");
+static void PrintBoard (char* grid) {
+   wprintf (L"┏━━━┳━━━┳━━━┓\n\u2503");
+   for (int row = 0, index = 0; row < 3; row++) {
+      for (int col = 0; col < 3 && index < 9; index++, col++) wprintf (L" %wc \u2503", grid[index]);
+      if (row != 2) wprintf (L"\n┣━━━╋━━━╋━━━┫\n\u2503");
    }
-   wprintf (L"\n\u2517\u2501\u2501\u2501\u253B\u2501\u2501\u2501\u253B\u2501\u2501\u2501\u251B\n");
+   wprintf (L"\n┗━━━┻━━━┻━━━┛\n");
 }
 
 // Returns the index of the box number within the range of 0-8.
-static int Get_Box_Num (wchar_t* arr, bool isAutoPlay) {
+static int Get_Box_Num (char* arr, bool isAutoPlay) {
    if (isAutoPlay) {
       int num = 4;
       while (arr[num] != L' ') num = rand () % 9;
@@ -104,23 +103,22 @@ static bool ModeChoice () {
 }
 
 int main () {
-   int val = _setmode (_fileno (stdout), _O_U8TEXT);
-   wchar_t grid[9] = { L' ',L' ',L' ' ,L' ' ,L' ' ,L' ' ,L' ' ,L' ',L' ' };
+   int val = _setmode (_fileno (stdout), _O_U8TEXT), Player = 1;
    char P1, P2;
    Get_Symbol (&P1, &P2);
-   bool isPlayer1 = true, isAutoPlay = false;
+   char grid[9] = { L' ',L' ',L' ' ,L' ' ,L' ' ,L' ' ,L' ' ,L' ',L' ' }, symbols[2] = { P1,P2 };
    wprintf (L"Enter 1 to play against the computer. Enter 2 for dual player mode.\n");
-   if (ModeChoice ()) isAutoPlay = true;
-   for (int i = 0; i < 9; i++, isPlayer1 = !isPlayer1) {
-      wprintf (L"%ls :\n", isPlayer1 ? L"Player 1" : L"Player 2");
-      int index = Get_Box_Num (grid, isAutoPlay && !isPlayer1);
+   bool isAutoPlay = ModeChoice ();
+   for (int turn = 1; turn < 10; turn++, Player = 1) {
+      if (!(turn % 2)) Player = 2;
+      wprintf (L"Player %d :\n", Player);
+      int index = Get_Box_Num (grid, isAutoPlay && Player == 2);
       if (index == -1) return -1;
-      grid[index] = isPlayer1 ? P1 : P2;
+      grid[index] = symbols[Player - 1];
       PrintBoard (grid);
-      switch (TicTacToe (grid, index, isPlayer1)) {
+      switch (TicTacToe (grid, index, Player)) {
          case 1: wprintf (L"\nPlayer 1 wins\n"); return 0;
          case 2: wprintf (L"\nPlayer 2 wins\n"); return 0;
-         default: break;
       }
    }
    wprintf (L"\nDraw\n");
