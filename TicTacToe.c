@@ -69,10 +69,10 @@ static void Get_Symbol (char* s1, char* s2) {
 
 // Prints 3 x 3 game board.
 static void PrintBoard (char* grid) {
-   wprintf (L"┏━━━┳━━━┳━━━┓\n\u2503");
+   wprintf (L"┏━━━┳━━━┳━━━┓\n┃");
    for (int row = 0, index = 0; row < 3; row++) {
-      for (int col = 0; col < 3 && index < 9; index++, col++) wprintf (L" %wc \u2503", grid[index]);
-      if (row != 2) wprintf (L"\n┣━━━╋━━━╋━━━┫\n\u2503");
+      for (int col = 0; col < 3 && index < 9; index++, col++) wprintf (L" %wc ┃", grid[index]);
+      if (row != 2) wprintf (L"\n┣━━━╋━━━╋━━━┫\n┃");
    }
    wprintf (L"\n┗━━━┻━━━┻━━━┛\n");
 }
@@ -98,7 +98,7 @@ static bool ModeChoice () {
    char choice = ' ';
    do
       choice = Get_Input (L"Enter (1/2):");
-   while (!(choice == '1' || choice == '2'));
+   while (choice != '1' && choice != '2');
    return choice == '1';
 }
 
@@ -109,8 +109,8 @@ int main () {
    char grid[9] = { L' ',L' ',L' ' ,L' ' ,L' ' ,L' ' ,L' ' ,L' ',L' ' }, symbols[2] = { P1,P2 };
    wprintf (L"Enter 1 to play against the computer. Enter 2 for dual player mode.\n");
    bool isAutoPlay = ModeChoice ();
-   for (int turn = 1; turn < 10; turn++, Player = 1) {
-      if (!(turn % 2)) Player = 2;
+   for (int turn = 1; turn < 10; turn++, Player = 2) {
+      if (turn&1) Player = 1;        // Player 1 plays odd number of turns.
       wprintf (L"Player %d :\n", Player);
       int index = Get_Box_Num (grid, isAutoPlay && Player == 2);
       if (index == -1) return -1;
