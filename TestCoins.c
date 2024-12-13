@@ -13,9 +13,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 #include "Coins.h"
 
-static bool isEqual (Coins a, Coins b) {
+static bool IsEqual (Coins a, Coins b) {
    return a.Ten == b.Ten && a.Five == b.Five && a.Two == b.Two && a.One == b.One;
 }
 
@@ -26,6 +27,7 @@ static bool Choice () {
       choice = tolower (getchar ());
       while (getchar () != '\n');
    } while (choice != 'y' && choice != 'n');
+   system ("cls");
    return choice == 'y';
 }
 
@@ -39,7 +41,7 @@ static void Test_Change () {
    printf ("--------------------------------------------------\n");
    for (int i = 0; i < length; i++) {
       Coins actual = Change (balance[i]);
-      printf ("|    %6d              |        %5s          |\n", balance[i], isEqual (actual, expected[i]) ? "Pass" : "Fail");
+      printf ("|    %6d              |        %5s          |\n", balance[i], IsEqual (actual, expected[i]) ? "Pass" : "Fail");
       printf ("--------------------------------------------------\n");
    }
 
@@ -51,16 +53,15 @@ static int GetInt (char* prompt) {
       char newLineChar[2] = { '\n','\0' };
       printf ("%s", prompt);
       fgets (input, 15, stdin);
-      long long int num = strtoll (input, &endptr, 10);
+      errno = 0;
+      int num = strtol (input, &endptr, 10);
       if (strpbrk (input, newLineChar) == NULL) while (getchar () != '\n');
       // The input range is fixed such that the maximum value that can be entered is 10,00,000
-      if (*endptr != '\n' || num < 1 || num > 1000000 || input[0] == '\n') {
+      if (*endptr != '\n' || num < 1 || num > 1000000 || input[0] == '\n' || errno == ERANGE) {
          printf ("Please enter a valid integer (1 - 10,00,000) and press 'enter' \n");
          continue;
       }
-      int longToInt = (int)num;
-      if (atoll (input) != longToInt) return -1; // Check if the integer cast resulted in overflow
-      return longToInt;
+      return num;
    }
 }
 
