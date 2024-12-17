@@ -16,6 +16,8 @@
 #include <errno.h>
 #include "Coins.h"
 
+#define NO_OF_TESTS 10
+
 static bool IsEqual (Coins a, Coins b) {
    return a.Ten == b.Ten && a.Five == b.Five && a.Two == b.Two && a.One == b.One;
 }
@@ -32,16 +34,15 @@ static bool Choice () {
 }
 
 static void Test_Change () {
-   int balance[] = { 1,10,5,2,23456,76456,99999,968 };
-   Coins expected[] = { { 0,0,0,1 },{ 1,0,0,0 },{ 0,1,0,0 },{ 0,0,1,0 },
-      { 2345,1,0,1 },{ 7645,1,0,1 }, { 9999,1,2,0 },{ 96,1,1,1 } };
-   int length = sizeof (balance) / sizeof (balance[0]);
    printf ("--------------------------------------------------\n");
    printf ("|     Balance            |        Result         |\n");
    printf ("--------------------------------------------------\n");
-   for (int i = 0; i < length; i++) {
-      Coins actual = Change (balance[i]);
-      printf ("|    %6d              |        %5s          |\n", balance[i], IsEqual (actual, expected[i]) ? "Pass" : "Fail");
+   for (int i = 0; i < NO_OF_TESTS; i++) {
+      int expected = rand () % 100000;
+      Coins res = Change (expected);
+      int actual = res.Ten * 10 + res.Five * 5 + res.Two * 2 + res.One * 1;
+      printf ("|    %6d              |        %5s          |\n", expected,
+               expected == actual ? "Pass" : "Fail");
       printf ("--------------------------------------------------\n");
    }
 
