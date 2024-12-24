@@ -12,15 +12,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-void Print (int i, int num) {
+static void Print (int i, int num) {
    printf ("Term %-3d:  %-5d\n", i, num);
 }
 
-void PrintFibonacci (int num) {
+static void PrintFibonacci (int num) {
    int n1 = 0;
    int n2 = 1;
-   if (num > 1) Print (1, 0);
-   if (num > 2) Print (2, 1);
+   if (num > 0) Print (1, 0);
+   if (num > 1) Print (2, 1);
    for (int i = 3; i <= num; i++) {
       int sum = n1 + n2;
       n1 = n2;
@@ -29,7 +29,7 @@ void PrintFibonacci (int num) {
    }
 }
 
-int GetInt (char* prompt) {
+static int GetInt (char* prompt) {
    printf ("%s : ", prompt);
    char input[5], * endptr = NULL;
    fgets (input, sizeof (input), stdin);
