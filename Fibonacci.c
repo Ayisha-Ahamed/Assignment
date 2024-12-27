@@ -5,6 +5,7 @@
 // ------------------------------------------------------------------
 // Test.c
 // Program on branch AB2.
+// Program to print Fibonacci series.
 // ------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,20 +13,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void Print (int i, int num) {
-   printf ("Term %-3d:  %-5d\n", i, num);
+static void Print (int i, long long int num) {
+   printf ("Term %-3d:  %-5lld\n", i, num);
 }
 
 static void PrintFibonacci (int num) {
-   int n1 = 0;
-   int n2 = 1;
-   if (num > 0) Print (1, 0);
-   if (num > 1) Print (2, 1);
-   for (int i = 3; i <= num; i++) {
-      int sum = n1 + n2;
+   if (num < 1) return;
+   long long int n1 = 0;
+   long long int n2 = 1;
+   Print (1, 0);
+   for (int i = 2; i <= num; i++) {
+      Print (i, n2);
+      long long int sum = n1 + n2;
       n1 = n2;
       n2 = sum;
-      Print (i, sum);
    }
 }
 
@@ -36,9 +37,9 @@ static int GetInt (char* prompt) {
    if (input[strlen (input) - 1] != '\n') while (getchar () != '\n');
    errno = 0;
    int num = strtol (input, &endptr, 10);
-   if (errno == ERANGE || *endptr != '\n' || num < 0 || num > 47) {
-      // After the 47th term, the Fibonacci series values exceed the INT range.
-      printf ("Please enter an integer value within range 1 - 47\n");
+   if (errno == ERANGE || *endptr != '\n' || num < 0 || num > 93) {
+      // After the 93rd term, the Fibonacci series exceeds long long int range.
+      printf ("Please enter an integer value within range 1 - 93\n");
       return -1;
    }
    return num;
