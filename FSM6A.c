@@ -49,30 +49,30 @@ static void FSM (char fInStr[], char fOutStr[], FILE* fOut) {
    fOutStr[count] = '\0';
    fprintf (fOut, "%s", fOutStr);
 }
-//
-//int main (int argc, char* argv[]) {
-//   if (argc < 3) {
-//      printf ("FSM: Usage <input.txt> <output.txt>\n");
-//      return -1;
-//   }
-//   FILE* fIn = fopen (argv[1], "r"), * fOut = fopen (argv[2], "w");
-//   if (fIn == NULL || fOut == NULL) {
-//      printf ("FSM: Error opening file %s\n", fIn == NULL ? argv[1] : argv[2]);
-//      return -1;
-//   }
-//   // Calculate the size of the file
-//   fseek (fIn, 0L, SEEK_END);
-//   size_t size = ftell (fIn);
-//   // Reset the file pointer to zeroth index
-//   fseek (fIn, 0, SEEK_SET);
-//   char* fOutStr = malloc (size + 5), * fInStr = malloc (size + 5);
-//   if (fInStr == NULL || fOutStr == NULL) return -1;
-//   fread (fInStr, 1, size, fIn);
-//   fInStr[size] = '\0';
-//   FSM (fInStr, fOutStr, fOut);
-//   free (fOutStr);
-//   free (fInStr);
-//   fclose (fOut);
-//   fclose (fIn);
-//   return 0;
-//}
+
+int main (int argc, char* argv[]) {
+   if (argc < 3) {
+      printf ("FSM: Usage <input.txt> <output.txt>\n");
+      return -1;
+   }
+   FILE* fIn = fopen (argv[1], "r"), * fOut = fopen (argv[2], "w");
+   if (fIn == NULL || fOut == NULL) {
+      printf ("FSM: Error opening file %s\n", fIn == NULL ? argv[1] : argv[2]);
+      return -1;
+   }
+   // Calculate the size of the file
+   fseek (fIn, 0L, SEEK_END);
+   size_t size = ftell (fIn);
+   // Reset the file pointer to zeroth index
+   fseek (fIn, 0, SEEK_SET);
+   char* fOutStr = malloc (size + 5), * fInStr = malloc (size + 5);
+   if (fInStr == NULL || fOutStr == NULL) return -1;
+   fread (fInStr, 1, size, fIn);
+   fInStr[size] = '\0';
+   FSM (fInStr, fOutStr, fOut);
+   free (fOutStr);
+   free (fInStr);
+   fclose (fOut);
+   fclose (fIn);
+   return 0;
+}
