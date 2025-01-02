@@ -12,9 +12,9 @@
 #include <stdio.h>
 #include <malloc.h>
 
-// States of the machine
+// States of the machine.
 typedef enum {
-   S0,  // Initial state
+   S0,  // Initial state.
    S1,  // After '0'
    S2,  // After '01'
    S3,  // After '011'
@@ -23,7 +23,7 @@ typedef enum {
    T3,  // After '110'
 } State;
 
-// State transition diagram implementation
+// State transition diagram implementation.
 static State NextState (State currentState, int input, int* output) {
    *output = 0;
    switch (currentState) {
@@ -35,11 +35,11 @@ static State NextState (State currentState, int input, int* output) {
       case T3: *output = input; return input ? S2 : S1;
       case S3: *output = !input; return input ? T2 : T3;
    }
-   return S0;  // Default return to initial state
+   return S0;  // Default return to initial state.
 }
 
 static void FSM (char fInStr[], char fOutStr[], FILE* fOut) {
-   State currentState = S0;  // Start in initial state
+   State currentState = S0;  // Start in initial state.
    int output = 0, count = 0, input = fInStr[count];
    while (input == '0' || input == '1') {
       currentState = NextState (currentState, input - '0', &output);
@@ -60,12 +60,13 @@ int main (int argc, char* argv[]) {
       printf ("FSM: Error opening file %s\n", fIn == NULL ? argv[1] : argv[2]);
       return -1;
    }
-   // Calculate the size of the file
+   // Calculate the size of the file.
    fseek (fIn, 0L, SEEK_END);
    size_t size = ftell (fIn);
-   // Reset the file pointer to zeroth index
+   // Reset the file pointer to zeroth index.
    fseek (fIn, 0, SEEK_SET);
-   char* fOutStr = malloc (size + 5), * fInStr = malloc (size + 5);
+   // To accommodate NULL character size + 1 characters are dynamically allocated.
+   char* fOutStr = malloc (size + 1), * fInStr = malloc (size + 1);
    if (fInStr == NULL || fOutStr == NULL) return -1;
    fread (fInStr, 1, size, fIn);
    fInStr[size] = '\0';
