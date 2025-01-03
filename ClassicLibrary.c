@@ -6,6 +6,7 @@
 // ClassicLibrary.c
 // Program on branch AB3.
 // Program to find the GCD and LCM of an array of natural numbers.
+// Program checks if a positive integer is a prime number.
 // ------------------------------------------------------------------------------------------------
 #include <stdbool.h>
 
@@ -61,12 +62,9 @@ int LCM (int arr[], int length) {
    int lcm = arr[length - 1];
    for (int i = 0; lcm > 0 && i < length - 1; i++) {
       if (lcm % arr[i] != 0) {
-         if (IsPrime (arr[i])) lcm *= arr[i];
-         else {
             int arrOfTwo[2] = { arr[i],lcm };
             int gcd = GCD (arrOfTwo, 2);
             if (!(gcd == arr[i] || gcd * arr[i] == arr[length - 1])) lcm = (lcm * arr[i]) / gcd;
-         }
       }
    }
    return lcm;

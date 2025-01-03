@@ -8,6 +8,7 @@
 // Header.h
 // Program on branch AB3.
 // Program to generate GCD and LCM of an array of natural numbers.
+// Program checks if a positive integer is a prime number.
 // ------------------------------------------------------------------------------------------------
 #include <stdbool.h>
 
