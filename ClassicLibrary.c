@@ -30,8 +30,7 @@ void BubbleSort (int arr[], int sizeOfArr) {
 bool IsPrime (int num) {
    if (num <= 1) return false;
    int half = num / 2;
-   // Factor of a number n cannot be greater than n / 2.
-   for (int i = 2; i <= num / 2; i++)
+   for (int i = 2; i * i <= num; i++)
       if (num % i == 0) return false;
    return true;
 }
@@ -62,9 +61,9 @@ int LCM (int arr[], int length) {
    int lcm = arr[length - 1];
    for (int i = 0; lcm > 0 && i < length - 1; i++) {
       if (lcm % arr[i] != 0) {
-            int arrOfTwo[2] = { arr[i],lcm };
-            int gcd = GCD (arrOfTwo, 2);
-            if (!(gcd == arr[i] || gcd * arr[i] == arr[length - 1])) lcm = (lcm * arr[i]) / gcd;
+         int arrOfTwo[2] = { arr[i],lcm };
+         int gcd = GCD (arrOfTwo, 2);
+         if (!(gcd == arr[i] || gcd * arr[i] == arr[length - 1])) lcm = (lcm * arr[i]) / gcd;
       }
    }
    return lcm;
