@@ -12,12 +12,20 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdlib.h>
 #pragma warning (disable:4996)
 
 #define MAX_STR 30
 #define NTESTS 5
 
-static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName) {
+// FileCompare() method return values.
+#define OUT_FILE_EOF -1  // Output file reached EOF before the reference file.
+#define REF_FILE_EOF -2  // Reference file reached EOF before the output file.
+#define MEM_ALLOC_ERROR -3  // Memory allocation error.
+#define IDENTICAL_FILES 0   // Output and reference files are identical.
+
+static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, char* outputFilePathAndName) 
+{
    char* cmdline = malloc (strlen (exeFilePathAndName) + strlen (inputFilePathAndName) +
                            strlen (outputFilePathAndName) + 3);
    if (cmdline == NULL) {
@@ -26,16 +34,13 @@ static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, ch
    }
    sprintf (cmdline, "%s%s%s%s%s", exeFilePathAndName, " ", inputFilePathAndName, " ",
             outputFilePathAndName);
-
    // Set up structures for process information.
    STARTUPINFOA si;
    PROCESS_INFORMATION pi;
-
    // Initialize memory for STARTUPINFO and PROCESS_INFORMATION structures.
    ZeroMemory (&si, sizeof (si));
    si.cb = sizeof (si);
    ZeroMemory (&pi, sizeof (pi));
-
    // Attempt to create the process
    if (!CreateProcessA (
       NULL,            // Application name (NULL if using command line).
@@ -55,14 +60,21 @@ static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName, ch
       free (cmdline);
       return 1;
    }
-
    // Wait until the process has finished execution.
    WaitForSingleObject (pi.hProcess, INFINITE);
-
+   DWORD exitCode; // Stores the exit code from FSM6A.exe
+   //CHeck if GetExitCodeProcess() has succeeded in retrieving the exit code.
+   if (GetExitCodeProcess (pi.hProcess, &exitCode) && exitCode != 0) {
+      // Non-zero return value indicates an error.
+      printf ("FSM6A.exe exited with code %lu\nTest Failed\nTerminating program...\n", exitCode);
+      CloseHandle (pi.hProcess);
+      CloseHandle (pi.hThread);
+      free (cmdline);
+      exit (1);
+   }
    // Close handles.
    CloseHandle (pi.hProcess);
    CloseHandle (pi.hThread);
-
    free (cmdline);
    return 0;
 }
@@ -75,9 +87,11 @@ static int FileCompare (FILE* fRef, FILE* fOut, int* bitNo) {
    size_t refSize = ftell (fRef), outSize = ftell (fOut);
    fseek (fRef, 0, SEEK_SET);
    fseek (fOut, 0, SEEK_SET);
-   // To accommodate NULL character size + 1 characters are dynamically allocated.
+   // If the files are of different size, return error code.
+   if (refSize != outSize) return outSize < refSize ? OUT_FILE_EOF : REF_FILE_EOF;
+   // To accommodate NULL character, size + 1 characters are dynamically allocated.
    char* fRefStr = malloc (refSize + 1), * fOutStr = malloc (outSize + 1);
-   if (fRefStr == NULL || fOutStr == NULL) return -3;
+   if (fRefStr == NULL || fOutStr == NULL) return MEM_ALLOC_ERROR;
    fread (fRefStr, 1, refSize, fRef);
    fread (fOutStr, 1, refSize, fOut);
    fRefStr[refSize] = '\0';
@@ -86,29 +100,23 @@ static int FileCompare (FILE* fRef, FILE* fOut, int* bitNo) {
    if (!strcmp (fRefStr, fOutStr)) {
       free (fRefStr);
       free (fOutStr);
-      return 2;  // Two files are equal, successful comparision of files.
+      return IDENTICAL_FILES;  // Two files are equal, successful comparision of files.
    }
    *bitNo = 0;
    char refChar = fRefStr[*bitNo], outChar = fOutStr[*bitNo];
    while (refChar != '\0' && outChar != '\0') {
       *bitNo += 1;
-      if (refChar != outChar) {
-         free (fRefStr);
-         free (fOutStr);
-         return refChar; // Return reference character i.e expected bit at position *bitNo.
-      }
+      if (refChar != outChar) break;
       refChar = fRefStr[*bitNo];
       outChar = fOutStr[*bitNo];
    }
    free (fRefStr);
    free (fOutStr);
-   // Files are equal but both files are of different length.
-   return outChar == '\0' ? -1 : -2;
+   return refChar; // / Return reference character i.e expected bit at position *bitNo.
 }
 
 int main (int argc, char** argv) {
    char input[MAX_STR], output[MAX_STR] = "Files/temp.txt", ref[MAX_STR];
-   int passCount = 0;
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n,", argv[0]);
       return -1;
@@ -126,17 +134,22 @@ int main (int argc, char** argv) {
          }
          int bitNo, result = FileCompare (fRef, fOut, &bitNo);
          switch (result) {
-            case -1: case -2: printf ("Error at bit no. %d %s reached EOF\n",
-                                      bitNo + 1, result == -1 ? output : ref); break;
-            case -3: printf ("Error allocating memory\n"); break;
-            case 2: printf ("No error testing %s\n", input); break;
+            case OUT_FILE_EOF: case REF_FILE_EOF:
+               printf ("Error at bit no. %d %s reached EOF\n", bitNo + 1,
+                       result == OUT_FILE_EOF ? output : ref); break;
+            case MEM_ALLOC_ERROR: printf ("Error allocating memory\n"); break;
+            case IDENTICAL_FILES: printf ("No error testing %s\n", input); break;
             default: printf ("Error at bit no. %d, Expected %d, Actual %d\n",
                              bitNo, result - '0', result == '0' ? 1 : 0); break;
          }
-         passCount += result - 1;
-         if (result != -1) fclose (fRef);
-         if (result != -2) fclose (fOut);
+         if (result != IDENTICAL_FILES) {
+            printf ("Test Failed\nTerminating the program....\n");
+            return -1;
+         }
+         if (fRef) fclose (fRef);
+         if (fOut) fclose (fOut);
       }
    }
-   printf ("Test %s\n", passCount == 5 ? "Pass" : "Fail");
+   printf ("Test Passed\n");
+   return 0;
 }
