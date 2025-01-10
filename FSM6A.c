@@ -9,11 +9,12 @@
 // ------------------------------------------------------------------------------------------------
 
 #define _CRT_SECURE_NO_WARNINGS
-#define FAIL 1
-#define PASS 0
 
 #include <stdio.h>
 #include <malloc.h>
+
+// Returns the status of FSM execution.
+int FSM (FILE* fIn, FILE* fOut);
 
 // States of the machine.
 typedef enum {
@@ -24,6 +25,7 @@ typedef enum {
    T1,  // After '1'
    T2,  // After '11'
    T3,  // After '110'
+   INVALID // Error state.
 } State;
 
 // State transition diagram implementation.
@@ -51,10 +53,10 @@ static State NextState (State currentState, int input, int* output) {
          *output = !input;
          return input ? T2 : T3;
    }
-   return S0;  // If the return value is not within the permissible states, return S0.
+   return INVALID;  // Return value is not a valid state.
 }
 
-static int FSM (FILE* fIn, FILE* fOut) {
+int FSM (FILE* fIn, FILE* fOut) {
    // Calculate the size of the file.
    fseek (fIn, 0L, SEEK_END);
    size_t size = ftell (fIn);
@@ -62,14 +64,15 @@ static int FSM (FILE* fIn, FILE* fOut) {
    fseek (fIn, 0, SEEK_SET);
    // To accommodate NULL character size + 1 characters are dynamically allocated.
    char* fOutStr = malloc (size + 1), * fInStr = malloc (size + 1);
-   if (fInStr == NULL || fOutStr == NULL) return FAIL;
+   if (fInStr == NULL || fOutStr == NULL) return -1; // Memory allocation error.
    fread (fInStr, 1, size, fIn);
    fInStr[size] = '\0';
    State currentState = S0;  // Start in initial state.
    int output = 0, count = 0, input = fInStr[count];
-   while (input == '0' || input == '1') {
+   for (int i = 0; i < size; i++) {
+      if (!(input == '0' || input == '1')) return -2; // Invalid valid.
       State nextState = NextState (currentState, input - '0', &output);
-      if (nextState == S0) return FAIL; // Invalid output.
+      if (nextState == INVALID) return -3; // Invalid state.
       currentState = nextState;
       fOutStr[count++] = output + '0';
       input = fInStr[count];
@@ -78,22 +81,23 @@ static int FSM (FILE* fIn, FILE* fOut) {
    fprintf (fOut, "%s", fOutStr);
    free (fOutStr);
    free (fInStr);
-   return PASS;
+   return 0;
 }
 
 int main (int argc, char* argv[]) {
    if (argc != 3) {
       printf ("FSM: Usage <input.txt> <output.txt>\n");
-      return 1;
+      return -1;
    }
    FILE* fIn = fopen (argv[1], "r"), * fOut = fopen (argv[2], "w");
    if (fIn == NULL || fOut == NULL) {
       printf ("FSM: Error opening file %s\n", fIn == NULL ? argv[1] : argv[2]);
-      return 1;
+      return -1;
    }
-   if (FSM (fIn, fOut) != PASS) {
-      printf ("FSM: Invalid state detected\n");
-      return 1;
+   switch (FSM (fIn, fOut)) {
+      case -1: printf ("FSM: %s Memory allocation error.\n", argv[1]); break;
+      case -2: printf ("FSM: %s Invalid input.\n", argv[1]); break;
+      case -3: printf ("FSM: %s Invalid state detected.\n", argv[1]); break;
    };
    fclose (fOut);
    fclose (fIn);
