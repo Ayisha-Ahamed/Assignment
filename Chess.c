@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <stdbool.h>
 #include <malloc.h>
 
@@ -21,23 +20,22 @@
 // Color codes.
 #define CYAN "\033[1;36m"
 #define RESET "\033[0m"
-#define MAX_LEN 35  // Maximum column length of chess board.
 
-// Error codes for file comparision
-#define MEM_ALLOC_ERROR -3
-#define INT_OVERFLOW -4
+// Maximum column length of chess board.
+#define MAXLEN 35
+#define MEMALLOCERROR -3
 
 typedef enum {
-   start,
-   middle,
-   end
+   Start,
+   Middle,
+   End
 }Line;
 
 ///<summary>Prints and writes a string to a file.</summary>
 static void PrintAndWrite (FILE* fp, wchar_t* string, wchar_t* param) {
    wchar_t* input = param == NULL ? L"" : param;
-   wchar_t str[MAX_LEN];
-   swprintf (str, MAX_LEN, L"%ls%ls", string, input);
+   wchar_t str[MAXLEN];
+   swprintf (str, MAXLEN, L"%ls%ls", string, input);
    wprintf (L"%ls%ls", string, input);
    fwprintf (fp, str);
 }
@@ -45,9 +43,9 @@ static void PrintAndWrite (FILE* fp, wchar_t* string, wchar_t* param) {
 ///<summary>Function to print lines separating.</summary>
 static void PrintLines (FILE* fp, Line input) {
    switch (input) {
-      case start: PrintAndWrite (fp, L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓", NULL); break;
-      case middle:PrintAndWrite (fp, L"\n┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫", NULL); break;
-      case end: PrintAndWrite (fp, L"\n┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛", NULL); break;
+      case Start: PrintAndWrite (fp, L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓", NULL); break;
+      case Middle:PrintAndWrite (fp, L"\n┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫", NULL); break;
+      case End: PrintAndWrite (fp, L"\n┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛", NULL); break;
    }
 }
 
@@ -59,9 +57,9 @@ static void RepeatChar (FILE* fp, wchar_t* pawn) {
 
 ///<summary>Prints all playable chess characters except pawn.</summary>
 static void PrintChars (FILE* fp, bool isBlack) {
-   wchar_t White[] = { L'♖',L'♘',L'♗',L'♕',L'♔',L'♗',L'♘',L'♖' };
-   wchar_t Black[] = { L'♜',L'♞',L'♝',L'♛',L'♚',L'♝',L'♞',L'♜' };
-   wchar_t* arr = isBlack ? Black : White;
+   wchar_t white[] = { L'♖',L'♘',L'♗',L'♕',L'♔',L'♗',L'♘',L'♖' };
+   wchar_t black[] = { L'♜',L'♞',L'♝',L'♛',L'♚',L'♝',L'♞',L'♜' };
+   wchar_t* arr = isBlack ? black : white;
    PrintAndWrite (fp, L"\n┃", NULL);
    for (int i = 0; i < 8; i++) {
       wprintf (L" %lc ┃", arr[i]);
@@ -71,14 +69,14 @@ static void PrintChars (FILE* fp, bool isBlack) {
 
 ///<summary>Displays the chess board.</summary>
 static void DisplayChessBoard (FILE* fp) {
-   PrintLines (fp, start);
+   PrintLines (fp, Start);
    for (int i = 0; i < 8; i++) {
       switch (i) {
-         case 0: PrintChars (fp, true); PrintLines (fp, middle); break;
-         case 1: RepeatChar (fp, BLACKPAWN); PrintLines (fp, middle); break;
-         case 6: RepeatChar (fp, WHITEPAWN); PrintLines (fp, middle); break;
-         case 7: PrintChars (fp, false); PrintLines (fp, end); break;
-         default: RepeatChar (fp, L"   "); PrintLines (fp, middle); break;
+         case 0: PrintChars (fp, true); PrintLines (fp, Middle); break;
+         case 1: RepeatChar (fp, BLACKPAWN); PrintLines (fp, Middle); break;
+         case 6: RepeatChar (fp, WHITEPAWN); PrintLines (fp, Middle); break;
+         case 7: PrintChars (fp, false); PrintLines (fp, End); break;
+         default: RepeatChar (fp, L"   "); PrintLines (fp, Middle); break;
       }
    }
    PrintAndWrite (fp, L"\0", NULL);
@@ -88,30 +86,31 @@ static void DisplayChessBoard (FILE* fp) {
 static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
    fseek (ref, 0, SEEK_END);
    fseek (output, 0, SEEK_END);
-   errno = 0;
    int refSize = ftell (ref), outSize = ftell (output);
    fseek (ref, 0, SEEK_SET);
    fseek (output, 0, SEEK_SET);
-   if (errno == ERANGE) return INT_OVERFLOW;
- //  if (refSize != outSize) return -1;  // Files are different.
+   if (refSize != outSize) return -1;  // Files are different.
    wchar_t* refStr = malloc (refSize), * outStr = malloc (outSize);
-   if (refStr == NULL || outStr == NULL) return MEM_ALLOC_ERROR;
+   if (refStr == NULL || outStr == NULL) return MEMALLOCERROR;
    fread (refStr, 1, refSize, ref);
    fread (outStr, 1, outSize, output);
-   *row = 0, * col = 0;
+   *row = 1, * col = 1;
    for (int i = 0; i < refSize / sizeof (wchar_t); i++) {
       *col += 1;
       wchar_t char1 = refStr[i], char2 = outStr[i];
-      if (refStr[i] == '\n') *row += 1;
+      if (refStr[i] == '\n') {
+         *row += 1; // Increment row no.
+         *col = 1;  // Reset column no.
+      }
       if (refStr[i] != outStr[i]) {
          free (refStr);
          free (outStr);
-         return -2;  // Mismatch
+         return -2;  // Files have different bit sequence.
       }
    }
    free (refStr);
    free (outStr);
-   return 0; // Size mismatch
+   return 0; // Files are identical.
 }
 
 int main () {
@@ -134,12 +133,10 @@ int main () {
    switch (result) {
       case 0: wprintf (CYAN""L"Test Passed.\n"RESET); break;
       case -1: wprintf (L"Files are different\nTest Failed.\n"); break;
+      case -2: wprintf (L"Error at row %d, col %d.\nTest Failed.\n", row, col); break;
       case -3: wprintf (L"Error allocating memory.\n"); break;
-      case -4: wprintf (L"File size is too large.\n"); break;
-      default: wprintf (L"Error at row %d, col %d.\nTest Failed.\n", row, col); break;
    }
    fclose (output);
    fclose (ref);
-
    return 0;
 }
