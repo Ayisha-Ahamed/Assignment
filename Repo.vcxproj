@@ -129,11 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ClassicLibrary.c" />
-    <ClCompile Include="Test.c" />
+    <ClCompile Include="FSMTest.c" />
+    <ClCompile Include="FSM6A.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header.h" />
+    <Image Include="State_Transition_Diagram.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
