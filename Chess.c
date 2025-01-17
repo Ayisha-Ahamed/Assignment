@@ -86,7 +86,7 @@ static void DisplayChessBoard (FILE* fp) {
 static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
    fseek (ref, 0, SEEK_END);
    fseek (output, 0, SEEK_END);
-   int refSize = ftell (ref), outSize = ftell (output);
+   size_t refSize = ftell (ref), outSize = ftell (output);
    fseek (ref, 0, SEEK_SET);
    fseek (output, 0, SEEK_SET);
    if (refSize != outSize) return -1;  // Files are different.
@@ -105,7 +105,7 @@ static int FileCompare (FILE* ref, FILE* output, int* row, int* col) {
       if (refStr[i] != outStr[i]) {
          free (refStr);
          free (outStr);
-         return -2;  // Files have different bit sequence.
+         return -2;  // Files have different character sequence.
       }
    }
    free (refStr);
