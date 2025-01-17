@@ -70,7 +70,7 @@ int FSM (FILE* fIn, FILE* fOut) {
    State currentState = S0;  // Start in initial state.
    int output = 0, count = 0, input = fInStr[count];
    for (int i = 0; i < size; i++) {
-      if (!(input == '0' || input == '1')) return -2; // Invalid valid.
+      if (!(input == '0' || input == '1')) return -2; // Invalid bit sequence.
       State nextState = NextState (currentState, input - '0', &output);
       if (nextState == INVALID) return -3; // Invalid state.
       currentState = nextState;
@@ -81,7 +81,7 @@ int FSM (FILE* fIn, FILE* fOut) {
    fprintf (fOut, "%s", fOutStr);
    free (fOutStr);
    free (fInStr);
-   return 0;
+   return 0; // No error in function execution.
 }
 
 int main (int argc, char* argv[]) {

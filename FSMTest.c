@@ -8,17 +8,21 @@
 // Program for testing FSM6A.c.
 // ------------------------------------------------------------------------------------------------
 
+#pragma warning (disable:4996)
 #include <windows.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-#pragma warning (disable:4996)
 
-#define MAX_STR 30
-#define NTESTS 5
-#define MEM_ALLOC_ERROR -3 // Memory allocation error.
+#define MAXSTR 30  // Maximum length of the file name.
+#define NTESTS 5   // Number of test cases.
+#define MEMALLOCERROR -3 // Memory allocation error.
+
+// Color codes.
+#define CYAN "\033[1;36m"
 #define MAGENTA "\033[1;35m"
 #define RESET "\033[0m"
+
 
 static int ExecProgram (char* exeFilePathAndName, char* inputFilePathAndName,
                         char* outputFilePathAndName) {
@@ -76,7 +80,7 @@ static int FileCompare (FILE* fRef, FILE* fOut, int* bitNo) {
    if (refSize != outSize) return -1; // Files are different.
    // To accommodate NULL character, size + 1 characters are dynamically allocated.
    char* fRefStr = malloc (refSize + 1), * fOutStr = malloc (outSize + 1);
-   if (fRefStr == NULL || fOutStr == NULL) return MEM_ALLOC_ERROR;
+   if (fRefStr == NULL || fOutStr == NULL) return MEMALLOCERROR;
    fread (fRefStr, 1, refSize, fRef);
    fread (fOutStr, 1, refSize, fOut);
    fRefStr[refSize] = '\0';
@@ -99,7 +103,7 @@ static int FileCompare (FILE* fRef, FILE* fOut, int* bitNo) {
 }
 
 int main (int argc, char** argv) {
-   char input[MAX_STR], output[MAX_STR] = "Files/temp.txt", ref[MAX_STR];
+   char input[MAXSTR], output[MAXSTR] = "Files/temp.txt", ref[MAXSTR];
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n,", argv[0]);
       return -1;
@@ -130,6 +134,6 @@ int main (int argc, char** argv) {
          if (fOut) fclose (fOut);
       }
    }
-   printf ("Test Passed\n");
+   printf (CYAN"Test Passed\n"RESET);
    return 0;
 }
