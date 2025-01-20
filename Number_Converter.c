@@ -22,65 +22,66 @@ static void PrintBaseThree (int num) {
                       "Nine" };
    char* elevenToNineteen[11] = { "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
                                   "Seventeen", "Eighteen", "Nineteen" };
-   if (num / 100) printf ("%s Hundred ", ones[num / 100]);
-   num %= 100;
+   if (num / 100) {
+      printf ("%s Hundred ", ones[num / 100]);
+      num %= 100;
+      if (num) printf ("and ");
+   }
    if (num >= 11 && num <= 19) {
       printf ("%s ", elevenToNineteen[num - 11]);
       return;
    }
-   if (num / 10)  printf ("%s ", tens[num / 10]);
+   if (num / 10) printf ("%s ", tens[num / 10]);
    num %= 10;
    if (num) printf ("%s ", ones[num]);
 }
 
 static void PrintString (int num) {
-   if (num == 0) {
-      printf ("Zero\n");
-      return;
-   }
+   if (num == 0) printf ("Zero\n");
+   else {
    // Higher multipliers of base 10.
-   char* multiplier[4] = { "Billion", "Million", "Thousand", "\n" };
-   // The highest base value that can be converted to string is 1 billion i.e 1000,000,000.
-   int base = 1000000000;
-   for (int i = 0; i < 4; i++) {
-      int quotient = num / base;
-      num %= base;
-      base /= 1000;
-      if (quotient > 0) {
-         PrintBaseThree (quotient);
-         printf ("%s ", multiplier[i]);
+      char* multiplier[4] = { "Billion", "Million", "Thousand", "\n" };
+      // The highest base value that can be converted to string is 1 billion i.e 1000,000,000.
+      int base = 1000000000;
+      for (int i = 0; i < 4; i++) {
+         int quotient = num / base;
+         num %= base;
+         base /= 1000;
+         if (quotient > 0) {
+            PrintBaseThree (quotient);
+            printf ("%s ", multiplier[i]);
+         }
       }
    }
    printf ("\n");
 }
 
 static void PrintRomanNumerals (int num) {
-   char romNum[7] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
-   int romBase[7] = { 1,5,10,50,100,500,1000 };
    // Roman number notation only supports characters from 1 to 3999.
-   if (num > 3999 || num < 1) {
-      printf ("Please enter a number within range 1 - 3999\n");
-      return;
-   }
-   for (int i = 6; i >= 0; i--) {
-      int quotient = num / romBase[i];
-      int nine = romBase[i - 1] * 9;  // 9 x multiplier of base 10.
-      int four = romBase[i - 1] * 4;  // 4 x multiplier of base 10.
-      // Prints multiples of 10.
-      if (quotient == 1 && i % 2 == 0) printf ("%c", romNum[i]);
-      // Prints multiples of 4.
-      else if (quotient == 4 && i < 6) {
-         printf ("%c%c", romNum[i], romNum[i + 1]);
-         num %= four;
+   if (num < 1 || num>3999) printf ("Number is outside roman numeral range [1-3999]\n");
+   else {
+      char romNum[7] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+      int romBase[7] = { 1,5,10,50,100,500,1000 };
+      for (int i = 6; i >= 0; i--) {
+         int quotient = num / romBase[i];
+         int nine = romBase[i - 1] * 9;  // 9 x multiplier of base 10.
+         int four = romBase[i - 1] * 4;  // 4 x multiplier of base 10.
+         // Prints multiples of 10.
+         if (quotient == 1 && i % 2 == 0) printf ("%c", romNum[i]);
+         // Prints multiples of 4.
+         else if (quotient == 4 && i < 6) {
+            printf ("%c%c", romNum[i], romNum[i + 1]);
+            num %= four;
+         }
+         // Prints multiples of 9.
+         else if (i > 0 && i < 6 && num >= nine) {
+            printf ("%c%c", romNum[i - 1], romNum[i + 1]);
+            num %= nine;
+         }
+         // Prints repeated characters.
+         else for (int j = quotient; j > 0; j--) printf ("%c", romNum[i]);
+         num %= romBase[i];
       }
-      // Prints multiples of 9.
-      else if (i > 0 && i < 6 && num >= nine) {
-         printf ("%c%c", romNum[i - 1], romNum[i + 1]);
-         num %= nine;
-      }
-      // Prints repeated characters.
-      else for (int j = quotient; j > 0; j--) printf ("%c", romNum[i]);
-      num %= romBase[i];
    }
    printf ("\n");
 }
@@ -93,21 +94,24 @@ static int GetInt (char* prompt) {
       if (str[strlen (str) - 1] != '\n') while (getchar () != '\n');
       errno = 0;
       int strToNum = strtol (str, &endptr, 10);
-      if (*endptr != '\n' || errno == ERANGE)
-         printf ("Invalid integer. Please enter a valid positive integer and press enter\n");
+      if (*endptr != '\n' || errno == ERANGE || strToNum < 0)
+         printf ("Please enter a valid positive integer within INT range.\n\n");
       else return strToNum;
    }
 }
 
+void Call (int num) {
+   printf ("\n");
+   PrintString (num);
+   PrintRomanNumerals (num);
+}
+
 int main () {
    int input;
+   printf ("Number Converter:");
    do {
-      input = GetInt ("Number Converter : \nEnter 1 to convert number to string\n"
-                      "Enter 2 to convert number to roman numeral\nEnter 3 to exit\nEnter your option");
+      input = GetInt ("\nEnter 1 to give input\nEnter 2 to exit\nEnter your option");
       system ("cls");
-      switch (input) {
-         case 1: PrintString (GetInt ("Enter any positive integer")); break;
-         case 2: PrintRomanNumerals (GetInt ("Enter any positive integer")); break;
-      }
-   } while (input != 3);
+      if (input == 1) Call (GetInt ("Enter any positive integer"));
+   } while (input != 2);
 }
