@@ -5,5 +5,9 @@
 // Ayisha Sameera,GET.
 // ------------------------------------------------------------------
 // Header.h
-// Program on branch main.
+// Program on branch AB9.
+// Program to print Pascal's triangle.
 // ------------------------------------------------------------------------------------------------
+
+// Returns nCk.
+int Combination (int n, int k);
