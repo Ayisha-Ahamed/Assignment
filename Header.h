@@ -1,5 +1,4 @@
-#ifndef HEADER_H
-#define HEADER_H
+#pragma once
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
@@ -28,5 +27,3 @@ int GCD (int arr[], int length);
 
 /// <summary>Returns the LCM of a array of natural numbers.</summary>
 int LCM (int arr[], int length);
-
-#endif 

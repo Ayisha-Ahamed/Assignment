@@ -5,10 +5,11 @@
 // ------------------------------------------------------------------
 // ClassicLibrary.c
 // Program on branch AB3.
-// Program to find the GCD and LCM of an array of natural numbers.
-// Program checks if a positive integer is a prime number.
+// B3: Program to find the GCD and LCM of an array of natural numbers.
+// B4: Program checks if a positive integer is a prime number.
 // ------------------------------------------------------------------------------------------------
 #include <stdbool.h>
+#include "Header.h"
 
 /// <summary>Sorts the array in ascending order.</summary>
 void BubbleSort (int arr[], int sizeOfArr) {
@@ -29,7 +30,6 @@ void BubbleSort (int arr[], int sizeOfArr) {
 /// <summary>Checks if the input positive integer is a prime number.</summary>
 bool IsPrime (int num) {
    if (num <= 1) return false;
-   int half = num / 2;
    for (int i = 2; i * i <= num; i++)
       if (num % i == 0) return false;
    return true;
@@ -41,17 +41,21 @@ int GCD (int arr[], int length) {
    // Assume that the smallest number of the array is its GCD.
    bool isDivisible = true;
    // Check if all the numbers are divisible by the smallest number.
-   for (int index = 1; isDivisible && index < length; index++)
-      if (arr[index] % arr[0] != 0) isDivisible = false;
-   if (isDivisible) return arr[0];
+   {
+      for (int index = 1; isDivisible && index < length; index++)
+         if (arr[index] % arr[0] != 0) isDivisible = false;
+      if (isDivisible) return arr[0];
+   }
    // Check if all the elements are divisible by factors of smallest element.
-   for (int divisor = smallest / 2; divisor > 1; divisor--) {
-      isDivisible = true;
-      for (int k = 0; isDivisible && k < length; k++) {
-         if ((arr[k] % divisor) != 0)
-            isDivisible = false;
+   {
+      for (int divisor = smallest / 2; divisor > 1; divisor--) {
+         isDivisible = true;
+         for (int k = 0; isDivisible && k < length; k++) {
+            if ((arr[k] % divisor) != 0)
+               isDivisible = false;
+         }
+         if (isDivisible) return divisor;
       }
-      if (isDivisible) return divisor;
    }
    return  1;
 }

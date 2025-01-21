@@ -75,7 +75,7 @@ static int GetInt (char prompt[]) {
 static void PrintResult (int(*func)(int[], int), int arr[], int length, char* prompt) {
    BubbleSort (arr, length);
    int output = func (arr, length);
-   if (output < 0) printf ("%s could not be calculated\n", prompt);
+   if (output < 0) printf ("%s exceeds INT range\n", prompt);
    else printf ("%s: %d\n", prompt, output);
 }
 
